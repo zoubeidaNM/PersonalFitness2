@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="www.thymeleaf.org" xmlns:sec="www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Welcome - Jobs</title>
+    <!-- Bootstrap core CSS-->
+    <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+    <!-- Custom fonts for this template-->
+    <link href="/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+    <!-- Custom styles for this template-->
+    <link href="/css/sb-admin.css" rel="stylesheet"/>
+</head>
+<body class="body_bg2">
+<div class="container">
+    <div class="card card-register mx-auto mt-5 border_solid">
+        <div class="card-header">Welcome</div>
+        <div class="card-body">
+
+            <div sec:authorize="isAuthenticated()">
+
+                <div sec:authorize="hasAuthority('RECRUITER')">
+                    <h1 th:field="*{user}" th:inline="text" class="text-center">Hello [[${user.firstName}]] from [[${user.companyName}]]</h1>
+                    <br/>
+                    <br/>
+                    <a href="/recruiter">
+                        <button type="submit" class="btn btn-primary btn-block">Go to Profile</button>
+                    </a>
+                </div>
+
+                <div sec:authorize="hasAuthority('USER')">
+                    <h1 th:field="*{user}" th:inline="text" class="text-center">Hello [[${user.firstName}]]</h1>
+                    <br/>
+                    <br/>
+                    <a href="/user">
+                        <button type="submit" class="btn btn-primary btn-block">Go to Profile</button>
+                    </a>
+                </div>
+
+            </div>
+            <div sec:authorize="isAnonymous()">
+                <p>Please Login with a role </p><br/>
+            </div>
+            <br/>
+            <br/>
+            <div class="text-center">
+                 <a class="d-block small mt-3" href="/logout">Logout</a>
+                <a class="d-block medium" href="/">Return home</a>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+</body>
+</html>
