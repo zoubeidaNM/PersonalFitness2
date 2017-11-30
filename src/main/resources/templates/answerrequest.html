@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Sign Up - Personal Fitness</title>
+    <!-- Bootstrap core CSS-->
+    <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom fonts for this template-->
+    <link href="/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <!-- Custom styles for this template-->
+    <link href="/css/sb-admin.css" rel="stylesheet">
+</head>
+
+<body class="body_bg2">
+<div class="container">
+    <div class="card card-register mx-auto mt-5 border_solid">
+        <div class="card-header">User Request</div>
+        <div class="card-body">
+            <form autocomplete="off" action="#" th:action="@{/user/request}" th:object="${request}" method="post">
+                <div th:if="${error}" class="has-error text-danger" th:text="${error_message}"></div>
+                <input type="hidden" th:field="*{id}"/>
+
+                    <div class="row">
+                        <label class="col-md-4"> User Name: </label>
+                        <div class="col-md-8">
+                            <label th:inline="text">[[${request.senderName}]]</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-md-4">Date: </label>
+                        <div class="col-md-8">
+                            <label th:inline="text">[[${request.date}]]</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-md-4">Time: </label>
+                        <div class="col-md-8">
+                            <label th:inline="text">[[${request.time}]]</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-md-4">Area: </label>
+                        <div class="col-md-8">
+                            <label th:inline="text">[[${request.area}]]</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-md-4">Answer: </label>
+                        <div class="col-md-8">
+                            <label th:inline="text">[[${request.status}]]</label>
+                        </div>
+                    </div>
+                    <hr/>
+
+                <!-- Button -->
+
+                <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
+
+
+            </form>
+            <div class="text-center">
+
+                <a class="d-block medium" href="/trainer">Return to trainer profile</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Bootstrap core JavaScript-->
+<script src="/vendor/jquery/jquery.min.js"></script>
+<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- Core plugin JavaScript-->
+<script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
+</body>
+
+</html>

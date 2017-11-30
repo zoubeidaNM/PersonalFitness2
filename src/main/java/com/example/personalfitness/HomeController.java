@@ -4,12 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 
 @Controller
 public class HomeController {
@@ -20,10 +18,46 @@ public class HomeController {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    RequestRepository requestRepository;
+
     @RequestMapping("/")
     public String index(){
         return "homepage";
     }
+
+    @RequestMapping("/welcome")
+    public String welcome(Principal principal, Model model){
+
+
+        FitnessUser user = userRepository.findByUsername(principal.getName());
+
+        model.addAttribute("user", user);
+        return "welcome";
+    }
+
+
+    @RequestMapping("/user")
+    public String user(Principal principal, Model model){
+
+
+        FitnessUser user = userRepository.findByUsername(principal.getName());
+
+        model.addAttribute("user", user);
+        return "user";
+    }
+
+
+    @RequestMapping("/trainer")
+    public String trainer(Principal principal, Model model){
+
+
+        FitnessUser user = userRepository.findByUsername(principal.getName());
+
+        model.addAttribute("user", user);
+        return "trainer";
+    }
+
 
     @RequestMapping("/login")
     public String login(){
@@ -56,16 +90,49 @@ public class HomeController {
 
                 return "registeruser";
             }
-            System.out.println(user.getFirstName());
             model.addAttribute("user", user);
 
-            System.out.println(user.getUsername());
-            System.out.println(user.getPassword());
+            System.out.println(user.getFirstName());
+            System.out.println(user.getArea());
+            System.out.println(user.getNeedOrSpecialty());
+
             return "login";
         }
     }
 
 
+    @RequestMapping("/user/request")
+    public String showRequest(Model model){
 
+        Request request = new Request();
 
+        model.addAttribute("request", request);
+        return "requestform";
+    }
+
+    @PostMapping("/user/request")
+    public String processUserRequest(Principal principal, @Valid @ModelAttribute("request") Request request,
+                                     BindingResult result, Model model){
+        FitnessUser user = userRepository.findByUsername(principal.getName());
+        if (result.hasErrors()) {
+            System.out.println(result.toString());
+            return "requestform";
+        } else {
+
+            request.processDate();
+            request.processTime();
+            request.setStatus("waiting");
+            requestRepository.save(request);
+            user.addRequest(request);
+            userRepository.save(user);
+            model.addAttribute("user", user);
+            return "user";
+        }
+    }
+
+    @RequestMapping("/trainer/requests/{id}")
+    public String showTrainerRequests(@PathVariable("id") long id, Model model){
+        model.addAttribute("request", requestRepository.findOne(id));
+        return "answerrequest";
+    }
 }

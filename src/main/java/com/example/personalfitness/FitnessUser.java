@@ -8,6 +8,7 @@ import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class FitnessUser {
@@ -84,11 +85,24 @@ public class FitnessUser {
     @JoinTable(joinColumns = @JoinColumn(name ="user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Collection<UserRole> roles;
 
+
+    public Set<Request> getRequests() {
+        return requests;
+    }
+
+    public void setRequests(Set<Request> requests) {
+        this.requests = requests;
+    }
+
+    @ManyToMany
+    private Set<Request> requests;
+
+
     public FitnessUser() {
         areas = new ArrayList<String>();
         specialities = new ArrayList<String>();
         roles = new HashSet<UserRole>();
-
+        requests= new HashSet<Request>();
         areas.add("Montgomery County");
         areas.add("Frederick County");
         areas.add("Prince George's County");
@@ -230,4 +244,7 @@ public class FitnessUser {
         specialities.add(speciality);
     }
 
+    public void addRequest(Request request){
+        requests.add(request);
+    }
 }

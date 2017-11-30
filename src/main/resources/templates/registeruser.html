@@ -45,14 +45,14 @@
           </div>
           <div class="form-group">
             <label for="inputEmail">Email</label>
-            <input class="form-control" id="inputEmail" type="text"
+            <input class="form-control" id="inputEmail" type="text" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"
                    th:field="*{email}"placeholder="Enter email">
             <span th:if="${#fields.hasErrors('email')}"
                   th:errors="*{email}">email error</span>
           </div>
           <div class="form-group">
             <label for="inputContact">Contact Number</label>
-            <input class="form-control" id="inputContact" type="text"
+            <input class="form-control" id="inputContact" type="text" pattern="[0-9-()]{10,14}"
                    th:field="*{contactNumber}"placeholder="Enter contact number">
             <span th:if="${#fields.hasErrors('contactNumber')}"
                   th:errors="*{contactNumber}">Contact number error</span>

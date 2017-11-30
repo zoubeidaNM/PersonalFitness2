@@ -11,8 +11,7 @@ body {
   overflow-x: hidden; }
 
 .body_bg2{
-  background: linear-gradient(to right, #c9ffbf, #ffafbd);
-}
+  background: linear-gradient(to right, #f0f2f0, #000c40);}
 
 .border_solid{
   border: 2px ridge black;
