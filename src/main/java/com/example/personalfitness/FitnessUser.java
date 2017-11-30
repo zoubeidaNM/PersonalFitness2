@@ -80,19 +80,18 @@ public class FitnessUser {
 
     private ArrayList<String> specialities;
 
+    private String headshot;
+
+    private boolean userRequestFlag;
+
+    private boolean trainerRequestFlag;
+
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(joinColumns = @JoinColumn(name ="user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Collection<UserRole> roles;
 
 
-    public Set<Request> getRequests() {
-        return requests;
-    }
-
-    public void setRequests(Set<Request> requests) {
-        this.requests = requests;
-    }
 
     @ManyToMany
     private Set<Request> requests;
@@ -114,7 +113,21 @@ public class FitnessUser {
         specialities.add("Aerobics");
         specialities.add("Dance");
 
+        headshot="/images/pic04.jpg";
+
+        userRequestFlag = false;
+        trainerRequestFlag = false;
+
     }
+
+    public Set<Request> getRequests() {
+        return requests;
+    }
+
+    public void setRequests(Set<Request> requests) {
+        this.requests = requests;
+    }
+
 
     public long getId() {
         return id;
@@ -246,5 +259,29 @@ public class FitnessUser {
 
     public void addRequest(Request request){
         requests.add(request);
+    }
+
+    public String getHeadshot() {
+        return headshot;
+    }
+
+    public void setHeadshot(String headshot) {
+        this.headshot = headshot;
+    }
+
+    public boolean isUserRequestFlag() {
+        return userRequestFlag;
+    }
+
+    public void setUserRequestFlag(boolean userRequestFlag) {
+        this.userRequestFlag = userRequestFlag;
+    }
+
+    public boolean isTrainerRequestFlag() {
+        return trainerRequestFlag;
+    }
+
+    public void setTrainerRequestFlag(boolean trainerRequestFlag) {
+        this.trainerRequestFlag = trainerRequestFlag;
     }
 }
