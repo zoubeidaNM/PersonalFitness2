@@ -31,9 +31,8 @@
     <h1><a href="#">Trainer</a></h1>
     <nav id="nav2">
         <ul>
+            <li><a href="/user" th:if="${user.trainerRequestFlag}"><i class="icon2 fa-bell major4"></i> New Request</a></li>
             <li><a href="/trainer">Profile</a></li>
-            <li><a href="/trainer" th:if="${user.trainerRequestFlag}" class="bg-danger">Request Alert</a></li>
-            <li><a href="/trainer" th:unless="${user.trainerRequestFlag}" class="bg-warning">Request Alert</a></li>
             <li><a href="/trainer/request">View Request</a></li>
             <li><a href="/trainer">Rate a User</a></li>
             <li><a href="/trainer">Search Users</a></li>
@@ -87,8 +86,13 @@
                     </div>
                 </section>
                     <section class="box_white" th:each="request :${user.requests}">
-                    <h2><i class="icon2 fa-sticky-note major2"></i>Request</h2>
-
+                        <div th:if="${request.receiverAnswer == 'Waiting'}">
+                            <h2><i class="icon2 fa-sticky-note major2"></i>Request</h2>
+                        </div>
+                        <div th:if="${request.receiverAnswer == 'Accepted'}">
+                            <h2><i class="icon2 fa-sticky-note major_green"></i>Request Accepted</h2>
+                        </div>
+                        <hr/>
                          <div class="row">
 
                             <label class="4u right"> User Name: </label>

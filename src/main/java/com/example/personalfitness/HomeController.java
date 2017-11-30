@@ -12,7 +12,9 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Map;
+import java.util.Set;
 
 @Controller
 public class HomeController {
@@ -114,6 +116,23 @@ public class HomeController {
 
         Request request = new Request();
 
+        ArrayList<String> trainerNames = new ArrayList<String>();
+
+        Iterable<FitnessUser> users =  userRepository.findAll();
+        for(FitnessUser user:users){
+            for(UserRole role: (user.getRoles())){
+            if (role.getRole().equalsIgnoreCase("TRAINER")){
+                trainerNames.add(user.getUsername());
+                System.out.println(user.getUsername());
+            }
+            }
+        }
+
+        String names[] = new String[trainerNames.size()];
+         names = trainerNames.toArray(names);
+
+        model.addAttribute("names", names);
+
         model.addAttribute("request", request);
         return "requestform";
     }
@@ -129,7 +148,8 @@ public class HomeController {
 
             request.processDate();
             request.processTime();
-            request.setStatus("waiting");
+            request.setStatus("Waiting");
+            request.setReceiverAnswer("Waiting");
             request.setSenderName(user.getUsername());
 
             FitnessUser trainer = userRepository.findByUsername(request.getReceiverName());
@@ -157,9 +177,35 @@ public class HomeController {
     }
 
     @PostMapping("/trainer/requests/{id}")
-    public String processTrainerRequest(@PathVariable("id") long id, Model model){
-        model.addAttribute("request", requestRepository.findOne(id));
-        return "trainer";
+    public String processTrainerRequest(Principal principal, @PathVariable("id") long id,
+                                        @RequestParam(value = "acceptParam") String acceptOrDecline,Model model){
+
+        FitnessUser trainerUser = userRepository.findByUsername(principal.getName());
+        Request request = requestRepository.findOne(id);
+
+         if (acceptOrDecline.equalsIgnoreCase("accept")) {
+            // user clicked "accept"
+            request.setAnswered(true);
+            request.setShowTrainer(true);
+            request.setReceiverAnswer("Accepted");
+            request.setStatus("Accepted");
+
+        } else if (acceptOrDecline.equalsIgnoreCase("decline")) {
+            // user clicked "decline"
+            request.setAnswered(true);
+            request.setStatus("Conflict");
+            request.setReceiverAnswer("Declined");
+            request.setShowTrainer(false);
+            trainerUser.discardDeniedRequest(request);
+        }
+
+        requestRepository.save(request);
+        FitnessUser user = userRepository.findByUsername(request.getSenderName());
+        user.setUserRequestFlag(true);
+        trainerUser.setTrainerRequestFlag(false);
+        model.addAttribute("user", trainerUser);
+
+        return "redirect:/trainer";
     }
 
 

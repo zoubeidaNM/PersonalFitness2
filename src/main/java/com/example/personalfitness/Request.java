@@ -17,66 +17,38 @@ public class Request {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private long id;
 
-    public String getReceiverName() {
-        return receiverName;
-    }
-
-    public void setReceiverName(String receiverName) {
-        this.receiverName = receiverName;
-    }
 
     @NotNull
     @NotEmpty
     private String receiverName;
 
-
-    private String date;
-
-
-     private String time;
-
     @NotNull
     @NotEmpty
     private String area;
 
+    private String senderName;
+    private String receiverAnswer; //Accepted, Denied
+    private String status; //Waiting, Accepted, Conflict
+    private boolean answered;
+    private boolean showTrainer;
+
+    private String date;
+    private String time;
     private int day;
     private String month;
     private int year;
-
     private int hours;
     private int minutes;
-
-
-    private String status;
-
-
-    private boolean answered;
-
-    public String getSenderName() {
-        return senderName;
-    }
-
-    public void setSenderName(String senderName) {
-        this.senderName = senderName;
-    }
-
-    private String senderName;
-
-    public String getReceiverAnswer() {
-        return receiverAnswer;
-    }
-
-    public void setReceiverAnswer(String receiverAnswer) {
-        this.receiverAnswer = receiverAnswer;
-    }
-
-    private String receiverAnswer;
 
     @ManyToMany(mappedBy = "requests")
     private Set<FitnessUser> users;
 
+    @ManyToMany(mappedBy = "trainerDeclinedRequests")
+    private Set<FitnessUser> decliningtrainers;
+
     public Request() {
         users=new HashSet<FitnessUser>();
+        showTrainer =true;
     }
 
     public Request(String receiverName, String date, String time, String area, String status) {
@@ -86,6 +58,7 @@ public class Request {
         this.area = area;
         this.status = status;
         this.users=new HashSet<FitnessUser>();
+        showTrainer = true;
     }
 
     public void processDate(){
@@ -145,8 +118,13 @@ public class Request {
         this.time = time;
     }
 
+    public String getReceiverName() {
+        return receiverName;
+    }
 
-
+    public void setReceiverName(String receiverName) {
+        this.receiverName = receiverName;
+    }
 
     public String getArea() {
         return area;
@@ -223,5 +201,39 @@ public class Request {
         this.answered = answered;
     }
 
+    public String getSenderName() {
+        return senderName;
+    }
 
+    public void setSenderName(String senderName) {
+        this.senderName = senderName;
+    }
+
+    public Set<FitnessUser> getDecliningtrainers() {
+        return decliningtrainers;
+    }
+
+    public void setDecliningtrainers(Set<FitnessUser> decliningtrainers) {
+        this.decliningtrainers = decliningtrainers;
+    }
+
+    public String getReceiverAnswer() {
+        return receiverAnswer;
+    }
+
+    public void setReceiverAnswer(String receiverAnswer) {
+        this.receiverAnswer = receiverAnswer;
+    }
+
+    public boolean isShowTrainer() {
+        return showTrainer;
+    }
+
+    public void setShowTrainer(boolean showTrainer) {
+        this.showTrainer = showTrainer;
+    }
+
+    public void addDecliningTrainer(FitnessUser trainer){
+        decliningtrainers.add(trainer);
+    }
 }

@@ -31,9 +31,8 @@
     <h1><a href="#">User</a></h1>
     <nav id="nav2">
         <ul>
+            <li><a href="/user" th:if="${user.userRequestFlag}"><i class="icon2 fa-bell major4"></i> New Request</a></li>
             <li><a href="/user">Profile</a></li>
-            <li><a href="/user" th:if="${user.userRequestFlag}">New Request</a></li>
-            <li><a href="/user" th:unless="${user.userRequestFlag}"><i class="icon2 fa-bell major4"></i>Request Ale</a></li>
             <li><a href="/user/request">Add Request</a></li>
             <li><a href="/user">Rate a Trainer</a></li>
             <li><a href="/user">List Trainers</a></li>
@@ -46,7 +45,7 @@
 <!-- Main -->
 <section id="main" class="wrapper style2">
     <header class="major">
-        <h2 th:inline="text">Welcome [[${user.username}]]</h2>
+        <h1 th:inline="text">Welcome [[${user.username}]]</h1>
     </header>
     <div class="container">
         <div class="row">
@@ -85,7 +84,15 @@
                 </div>
 
                 <section class="box_white" th:each="request :${user.requests}">
+                    <div th:if="${request.status == 'Waiting'}">
                     <h2><i class="icon2 fa-sticky-note major2"></i>Request</h2>
+                    </div>
+                    <div th:if="${request.status == 'Accepted'}">
+                        <h2><i class="icon2 fa-sticky-note major_green"></i>Request Accepted</h2>
+                    </div>
+                    <div th:if="${request.status == 'Conflict'}">
+                        <h2><i class="icon2 fa-sticky-note major_yellow"></i>Request Conflict</h2>
+                    </div>
                     <hr/>
 
                     <div>

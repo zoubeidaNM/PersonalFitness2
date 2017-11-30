@@ -96,12 +96,18 @@ public class FitnessUser {
     @ManyToMany
     private Set<Request> requests;
 
+    @ManyToMany
+    private Set<Request> trainerDeclinedRequests;
+
+
 
     public FitnessUser() {
         areas = new ArrayList<String>();
         specialities = new ArrayList<String>();
         roles = new HashSet<UserRole>();
         requests= new HashSet<Request>();
+        trainerDeclinedRequests = new HashSet<Request>();
+
         areas.add("Montgomery County");
         areas.add("Frederick County");
         areas.add("Prince George's County");
@@ -283,5 +289,18 @@ public class FitnessUser {
 
     public void setTrainerRequestFlag(boolean trainerRequestFlag) {
         this.trainerRequestFlag = trainerRequestFlag;
+    }
+
+    public Set<Request> getTrainerDeclinedRequests() {
+        return trainerDeclinedRequests;
+    }
+
+    public void setTrainerDeclinedRequests(Set<Request> trainerDeclinedRequests) {
+        this.trainerDeclinedRequests = trainerDeclinedRequests;
+    }
+
+    public void discardDeniedRequest(Request request){
+        requests.remove(request);
+        trainerDeclinedRequests.add(request);
     }
 }

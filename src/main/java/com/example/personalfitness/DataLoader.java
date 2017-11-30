@@ -56,10 +56,10 @@ class DataLoader implements CommandLineRunner {
         LocalDate date=LocalDate.parse("11/11/2017",dTF);
         LocalTime time= LocalTime.parse("11:02",hr24);
         System.out.println(time);
-        Request request= new Request("Sam",date.format(dTF),time.format(hr24), "Montgomery County", "waiting");
+        Request request= new Request("Sam",date.format(dTF),time.format(hr24), "Montgomery County", "Waiting");
                 request.addUser(user);
-        user.addRequest(request);
-        requestRepository.save(request);
+        //user.addRequest(request);
+        //requestRepository.save(request);
 
         userRepository.save(user);
 
@@ -85,7 +85,7 @@ class DataLoader implements CommandLineRunner {
        date=LocalDate.parse("11/11/2017",dTF);
          time= LocalTime.parse("11:02",hr24);
         System.out.println(time);
-         request= new Request("Sam",date.format(dTF),time.format(hr24), "Montgomery County", "accepted");
+         request= new Request("Sam",date.format(dTF),time.format(hr24), "Montgomery County", "Accepted");
         request.setSenderName("Bob");
         request.setAnswered(true);
         request.setReceiverAnswer("Accepted");
@@ -98,7 +98,7 @@ class DataLoader implements CommandLineRunner {
         date=LocalDate.parse("11/11/2017",dTF);
         time= LocalTime.parse("12:30",hr24);
         System.out.println(time);
-        request= new Request("Sam",date.format(dTF),time.format(hr24), "Montgomery County", "waiting");
+        request= new Request("Sam",date.format(dTF),time.format(hr24), "Montgomery County", "Waiting");
         request.setSenderName("Bob");
         request.setAnswered(false);
         request.addUser(user);

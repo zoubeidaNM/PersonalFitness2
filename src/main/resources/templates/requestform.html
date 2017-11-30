@@ -8,12 +8,46 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <title>Sign Up - Personal Fitness</title>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <!-- Bootstrap core CSS-->
     <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom fonts for this template-->
     <link href="/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <!-- Custom styles for this template-->
     <link href="/css/sb-admin.css" rel="stylesheet">
+    <script>
+        $( function() {
+            var availableTags = [[$trainers[
+                "ActionScript",
+                "AppleScript",
+                "Asp",
+                "BASIC",
+                "C",
+                "C++",
+                "Clojure",
+                "COBOL",
+                "ColdFusion",
+                "Erlang",
+                "Fortran",
+                "Groovy",
+                "Haskell",
+                "Java",
+                "JavaScript",
+                "Lisp",
+                "Perl",
+                "PHP",
+                "Python",
+                "Ruby",
+                "Scala",
+                "Scheme"
+            ];
+            $( "#tags" ).autocomplete({
+                source: availableTags
+            });
+        } );
+    </script>
+
 </head>
 
 <body class="body_bg2">
@@ -118,19 +152,19 @@
                         <input id="textinput4" name="textinput4" placeholder="area" class="form-control input-md"
                          type="text" th:field="*{area}">
                         <span th:if="${#fields.hasErrors('area')}"
-                              th:errors="*{area}">Password error</span>
+                              th:errors="*{area}">Area error</span>
 
                     </div>
                 </div>
 
                 <!-- Text input-->
                 <div class="form-group">
-                    <label for="textinput">Trainer Name</label>
+                    <label for="tags">Trainer Name</label>
                     <div>
-                        <input id="textinput5" name="textinput5" placeholder="trainer name"
+                        <input id="tags" name="textinput5" placeholder="trainer name"
                                class="form-control input-md" type="text" th:field="*{receiverName}">
                         <span th:if="${#fields.hasErrors('receiverName')}"
-                              th:errors="*{receiverName}">Password error</span>
+                              th:errors="*{receiverName}">Trainer name error</span>
 
                     </div>
                 </div>
@@ -138,10 +172,11 @@
                 <br/>
                 <!-- Button -->
 
-                <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
+                <button type="submit" class="btn btn-primary btn-block">Send Request</button>
 
 
             </form>
+            <br/>
             <div class="text-center">
 
                 <a class="d-block medium" href="/user">Return to user profile</a>
@@ -149,6 +184,8 @@
         </div>
     </div>
 </div>
+
+
 <!-- Bootstrap core JavaScript-->
 <script src="/vendor/jquery/jquery.min.js"></script>
 <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

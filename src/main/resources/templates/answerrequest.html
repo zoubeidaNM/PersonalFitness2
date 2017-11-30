@@ -21,7 +21,7 @@
     <div class="card card-register mx-auto mt-5 border_solid">
         <div class="card-header">User Request</div>
         <div class="card-body">
-            <form autocomplete="off" action="#" th:action="@{/user/request}" th:object="${request}" method="post">
+            <form autocomplete="off" th:object="${request}" action="#" th:action="@{/trainer/requests/{id}(id=${request.id})}"  method="post">
                 <div th:if="${error}" class="has-error text-danger" th:text="${error_message}"></div>
                 <input type="hidden" th:field="*{id}"/>
 
@@ -49,20 +49,24 @@
                             <label th:inline="text">[[${request.area}]]</label>
                         </div>
                     </div>
-                    <div class="row">
-                        <label class="col-md-4">Answer: </label>
-                        <div class="col-md-8">
-                            <label th:inline="text">[[${request.status}]]</label>
-                        </div>
+                <br/>
+                <hr/>
+                <br/>
+                <div class="form-row">
+                    <div class="col-md-6">
+                        <button type="submit" class="btn btn-success btn-block" name="acceptParam" value="accept">
+                            Accept
+                        </button>
                     </div>
-                    <hr/>
-
-                <!-- Button -->
-
-                <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
-
-
+                    <div class="col-md-6">
+                        <button type="submit" class="btn btn-danger btn-block" name="acceptParam" value="decline">
+                            Decline
+                        </button>
+                    </div>
+                </div>
             </form>
+            <br/>
+            <br/>
             <div class="text-center">
 
                 <a class="d-block medium" href="/trainer">Return to trainer profile</a>
