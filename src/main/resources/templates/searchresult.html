@@ -32,35 +32,63 @@
 
 <!-- Headers-->
 <div th:replace="homepage::header1"></div>
-<div th:replace="homepage::header1"></div>
 <div sec:authorize="hasAuthority('USER')">
-    <div th:replace="useraccount::header2"></div>
+    <div th:replace="user::header2"></div>
 </div>
-<div sec:authorize="hasAuthority('RECRUITER')">
-    <div th:replace="recruiterprofile::header2"></div>
-</div>
+<!--<div sec:authorize="hasAuthority('RECRUITER')">-->
+    <!--<div th:replace="recruiterprofile::header2"></div>-->
+<!--</div>-->
 <div class="container">
     <h3></h3>
     <h3></h3>
     <hr/>
-    <h3 class="text-center" th:inline="text">Search result for: [[${searchStr}]].</h3>
+    <h3 class="text-center" th:inline="text">List of all Trainers</h3>
     <hr/>
     <table class="table table-striped table-bordered table-hover table-responsive">
         <tr>
             <th>Trainer Name</th>
             <th>Specialty</th>
             <th>Level</th>
-            <th>Area</th>
+            <th>Rating</th>
             <td>Actions</td>
         </tr>
         <tr th:each="user : ${trainers}">
             <td th:text="${user.username}"></td>
-            <td th:text="${user.speciality}"></td>
-            <td th:text="${user.level}"></td>
-            <td th:text="${user.area}"></td>
+            <td th:text="${user.needOrSpecialty}"></td>
+            <td th:text="${user.fitnessLevel}"></td>
+            <td>   <div class="row">
+
+                <div class="8u" th:if="${user.averageRating == 0}">
+                    <label th:inline="text"><i class ="fa fa-star-o"></i><i class ="fa fa-star-o"></i>
+                        <i class ="fa fa-star-o"></i><i class ="fa fa-star-o"></i><i class ="fa fa-star-o"></i></label>
+                </div>
+            <div class="8u" th:if="${user.averageRating == 1}">
+                <label th:inline="text"><i class ="fa fa-star" style="color:yellow;"></i></label>
+            </div>
+            <div class="8u" th:if="${user.averageRating == 2}">
+                <label th:inline="text"><i class ="fa fa-star"style="color:yellow;"></i>
+                    <i class ="fa fa-star"style="color:yellow;"></i></label>
+            </div>
+            <div class="8u" th:if="${user.averageRating == 3}">
+                <label th:inline="text"><i class ="fa fa-star" style="color:yellow;"></i><i class ="fa fa-star" style="color:yellow;">
+
+                </i><i class ="fa fa-star" style="color:yellow;"></i></label>
+            </div>
+            <div class="8u" th:if="${user.averageRating == 4}">
+                <label th:inline="text"><i class ="fa fa-star" style="color:yellow;"></i><i class ="fa fa-star" style="color:yellow;"></i>
+                    <i class ="fa fa-star" style="color:yellow;"></i><i class ="fa fa-star" style="color:yellow;"></i></label>
+            </div>
+            <div class="8u" th:if="${user.averageRating == 5}">
+                <label th:inline="text"><i class ="fa fa-star" style="color:yellow;"></i><i class ="fa fa-star" style="color:yellow;">
+
+                </i><i class ="fa fa-star" style="color:yellow;"></i><i class ="fa fa-star" style="color:yellow;"></i>
+                    <i class ="fa fa-star" style="color:yellow;"></i></label>
+            </div>
+
+        </div></td>
             <td>
                 <a sec:authorize="hasAuthority('USER')"
-                   th:href="@{/user/details/{id}(id=${user.id})}">details</a>
+                   th:href="@{/user/details/{id}(id=${user.id})}">Send Request</a>
                 <a sec:authorize="hasAuthority('TRAINER')"
                    th:href="@{/recruiter/details/{id}(id=${user.id})}">details</a>
 

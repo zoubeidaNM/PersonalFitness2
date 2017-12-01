@@ -23,6 +23,14 @@ class DataLoader implements CommandLineRunner {
     @Autowired
     RequestRepository requestRepository;
 
+    @Autowired
+    NameRepository areas;
+
+    @Autowired
+    NameRepository specialties;
+
+
+
     @Override
     public void run(String... strings) throws Exception {
         System.out.println("Loading data . . .");
@@ -35,6 +43,28 @@ class DataLoader implements CommandLineRunner {
         UserRole trainerRole = roleRepository.findByRole("TRAINER");
         UserRole adminRole = roleRepository.findByRole("ADMIN");
 
+        Name name1= new Name("Montgomery County");
+        Name name2= new Name("Frederick County");
+        Name name3= new Name("Prince George's County");
+        Name name4= new Name("All");
+
+        areas.save(name1);
+        areas.save(name2);
+        areas.save(name3);
+        areas.save(name4);
+
+        name1=new Name("Weight Training");
+        name2=new Name("Martial Arts ");
+        name3=new Name("Water Sports");
+        name4=new Name("Aerobics");
+        Name name5=new Name("Dance");
+
+//        specialties.save(name1);
+//        specialties.save(name2);
+//        specialties.save(name3);
+//        specialties.save(name4);
+//        specialties.save(name5);
+
 
         FitnessUser user = new FitnessUser();
         //"bob@bob.com", true, "bobberson", "Bob", "bob", "bob"
@@ -46,20 +76,30 @@ class DataLoader implements CommandLineRunner {
         user.setUsername("bob");
         user.setPassword("pass");
         user.setRoles(Arrays.asList(userRole));
-        user.setFitnessLevel("Beginner");
-        user.setArea("Montgomery County");
+        user.setFitnessLevel("Intermediate");
+        user.setArea("Frederick County");
         user.setGender("Male");
         user.setNeedOrSpecialty("Dance");
         DateTimeFormatter dTF = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         DateTimeFormatter hr24 = DateTimeFormatter.ofPattern("kk:m");
 
-        LocalDate date=LocalDate.parse("11/11/2017",dTF);
-        LocalTime time= LocalTime.parse("11:02",hr24);
-        System.out.println(time);
-        Request request= new Request("Sam",date.format(dTF),time.format(hr24), "Montgomery County", "Waiting");
-                request.addUser(user);
-        //user.addRequest(request);
-        //requestRepository.save(request);
+
+        userRepository.save(user);
+
+        user = new FitnessUser();
+        user.setFirstName("Jim");
+        user.setLastName("Jimson");
+        user.setEmail("jim@jim.com");
+        user.setContactNumber("301-111-5555");
+        user.setEnabled(true);
+        user.setUsername("jim");
+        user.setPassword("pass");
+        user.setRoles(Arrays.asList(userRole));
+        user.setFitnessLevel("Beginner");
+        user.setArea("Frederick County");
+        user.setGender("Male");
+        user.setNeedOrSpecialty("Weight Training");
+
 
         userRepository.save(user);
 
@@ -76,37 +116,15 @@ class DataLoader implements CommandLineRunner {
         user.setUsername("sam");
         user.setPassword("pass");
         user.setRoles(Arrays.asList(trainerRole));
-        user.setFitnessLevel("Beginner");
+        user.setFitnessLevel("Advanced");
         user.setArea("All");
         user.setGender("Male");
-        user.setNeedOrSpecialty("Dance");
-
-
-       date=LocalDate.parse("11/11/2017",dTF);
-         time= LocalTime.parse("11:02",hr24);
-        System.out.println(time);
-         request= new Request("Sam",date.format(dTF),time.format(hr24), "Montgomery County", "Accepted");
-        request.setSenderName("Bob");
-        request.setAnswered(true);
-        request.setReceiverAnswer("Accepted");
-         request.addUser(user);
-
-        user.addRequest(request);
-        requestRepository.save(request);
-
-
-        date=LocalDate.parse("11/11/2017",dTF);
-        time= LocalTime.parse("12:30",hr24);
-        System.out.println(time);
-        request= new Request("Sam",date.format(dTF),time.format(hr24), "Montgomery County", "Waiting");
-        request.setSenderName("Bob");
-        request.setAnswered(false);
-        request.addUser(user);
-
-        user.addRequest(request);
-        requestRepository.save(request);
+        user.setNeedOrSpecialty("Martial Arts");
 
         userRepository.save(user);
+
+
+
 
 
 
@@ -119,11 +137,11 @@ class DataLoader implements CommandLineRunner {
         user.setEnabled(true);
         user.setUsername("Shaun11");
         user.setPassword("pass");
-        user.setRoles(Arrays.asList(trainerRole, adminRole));
-        user.setFitnessLevel("Beginner");
+        user.setRoles(Arrays.asList(trainerRole));
+        user.setFitnessLevel("Advanced");
         user.setArea("All");
         user.setGender("Male");
-        user.setNeedOrSpecialty("Dance");
+        user.setNeedOrSpecialty("Martial Arts");
         userRepository.save(user);
 
         user = new FitnessUser();
@@ -135,11 +153,11 @@ class DataLoader implements CommandLineRunner {
         user.setEnabled(true);
         user.setUsername("Tony23");
         user.setPassword("pass");
-        user.setRoles(Arrays.asList(trainerRole, adminRole));
+        user.setRoles(Arrays.asList(trainerRole));
         user.setFitnessLevel("Beginner");
         user.setArea("All");
         user.setGender("Male");
-        user.setNeedOrSpecialty("Dance");
+        user.setNeedOrSpecialty("Aerobics");
         userRepository.save(user);
 
         user = new FitnessUser();
@@ -151,11 +169,11 @@ class DataLoader implements CommandLineRunner {
         user.setEnabled(true);
         user.setUsername("MichelleO");
         user.setPassword("pass");
-        user.setRoles(Arrays.asList(trainerRole, adminRole));
-        user.setFitnessLevel("Beginner");
+        user.setRoles(Arrays.asList(trainerRole));
+        user.setFitnessLevel("Intermediate");
         user.setArea("All");
         user.setGender("Female");
-        user.setNeedOrSpecialty("Dance");
+        user.setNeedOrSpecialty("Aerobics");
         userRepository.save(user);
 
         user = new FitnessUser();
@@ -167,7 +185,7 @@ class DataLoader implements CommandLineRunner {
         user.setEnabled(true);
         user.setUsername("Danielle");
         user.setPassword("pass");
-        user.setRoles(Arrays.asList(trainerRole, adminRole));
+        user.setRoles(Arrays.asList(trainerRole));
         user.setFitnessLevel("Beginner");
         user.setArea("All");
         user.setGender("Female");
@@ -183,11 +201,11 @@ class DataLoader implements CommandLineRunner {
         user.setEnabled(true);
         user.setUsername("nathalie03");
         user.setPassword("pass");
-        user.setRoles(Arrays.asList(trainerRole, adminRole));
+        user.setRoles(Arrays.asList(trainerRole));
         user.setFitnessLevel("Beginner");
         user.setArea("All");
         user.setGender("Male");
-        user.setNeedOrSpecialty("Dance");
+        user.setNeedOrSpecialty("Water Sports");
         userRepository.save(user);
 
 

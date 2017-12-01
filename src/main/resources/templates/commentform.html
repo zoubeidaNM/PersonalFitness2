@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en" lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org" xmlns:sec="www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Comment - Personal Fitness</title>
+    <!-- Bootstrap core CSS-->
+    <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom fonts for this template-->
+    <link href="/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <!-- Custom styles for this template-->
+    <link href="/css/sb-admin.css" rel="stylesheet">
+    <link href="/css/stars.css" rel="stylesheet">
+
+
+</head>
+
+<body class="body_bg2">
+<div class="container">
+    <div class="card card-register mx-auto mt-5 border_solid">
+        <div class="card-header">User Comment</div>
+        <div class="card-body">
+<!-- USER SECTION-->
+            <div sec:authorize="hasAuthority('USER')">
+            <form autocomplete="off" action="#" th:action="@{/user/comment}" th:object="${comment}" method="post">
+                <div th:if="${error}" class="has-error text-danger" th:text="${error_message}"></div>
+                <input type="hidden" th:field="*{id}"/>
+
+
+                <div class="form-group">
+                    <label for="sel3">Trainer Name</label>
+                    <div>
+                        <select class="form-control" id="sel3" th:name="trainerName" th:field="*{trainerName}">
+                            <option th:each="t :${user.ratableUserNames}" th:value="${t}" th:text="${t}"></option>
+                        </select>
+
+                     </div>
+                </div>
+
+
+
+
+
+                <div class="form-group"><label>Rating </label>
+
+                    <div >
+                        <fieldset class="rating" name="rating">
+                            <input type="radio" id="star5" name="rating" value="5"/><label class="full" for="star5"
+                                                                                           title="Awesome - 5 stars"></label>
+                            <!--<input type="radio" id="star4half" name="rating" value="4" /><label class="half" for="star4half" title="Pretty good - 4.5 stars"></label>-->
+                            <input type="radio" id="star4" name="rating" value="4"/><label class="full" for="star4"
+                                                                                           title="Pretty good - 4 stars"></label>
+                            <!--<input type="radio" id="star3half" name="rating" value="3" /><label class="half" for="star3half" title="Meh - 3.5 stars"></label>-->
+                            <input type="radio" id="star3" name="rating" value="3"/><label class="full" for="star3"
+                                                                                           title="Meh - 3 stars"></label>
+                            <!--<input type="radio" id="star2half" name="rating" value="2" /><label class="half" for="star2half" title="Kinda bad - 2.5 stars"></label>-->
+                            <input type="radio" id="star2" name="rating" value="2"/><label class="full" for="star2"
+                                                                                           title="Kinda bad - 2 stars"></label>
+                            <!--<input type="radio" id="star1half" name="rating" value="1" /><label class="half" for="star1half" title="Meh - 1.5 stars"></label>-->
+                            <input type="radio" id="star1" name="rating" value="1"/><label class="full" for="star1"
+                                                                                           title="Sucks big time - 1 star"></label>
+                            <!--<input type="radio" id="starhalf" name="rating" value="0" /><label class="half" for="starhalf" title="Sucks big time - 0.5 stars"></label>-->
+                        </fieldset>
+                    </div>
+                </div>
+                <br/>
+                <!-- Text input-->
+
+                <div class="form-group">
+                    <label for="textinput5">Comment</label>
+                    <div>
+                        <textarea rows="5" id="textinput5" name="textinput5"
+                                  class="form-control input-md" th:field="*{content}"></textarea>
+
+                    </div>
+                </div>
+
+
+                <br/>
+                <br/>
+                <!-- Button -->
+
+                <button type="submit" class="btn btn-primary btn-block">Submit</button>
+
+
+            </form>
+                <div class="text-center">
+
+                    <a class="d-block medium" href="/user">Return to user profile</a>
+                </div>
+
+            </div>
+
+
+            <!-- USER SECTION-->
+
+
+
+
+            <!--TRAINER SECTION -->
+
+            <div sec:authorize="hasAuthority('TRAINER')">
+                <form autocomplete="off" action="#" th:action="@{/trainer/comment}" th:object="${comment}" method="post">
+                    <div th:if="${error}" class="has-error text-danger" th:text="${error_message}"></div>
+                    <input type="hidden" th:field="*{id}"/>
+
+
+                    <div class="form-group">
+                        <label for="sel4">User Name</label>
+                        <div>
+                            <select class="form-control" id="sel4" th:name="userName" th:field="*{userName}">
+                                <option th:each="t :${user.ratableUserNames}" th:value="${t}" th:text="${t}"></option>
+                            </select>
+
+                        </div>
+                    </div>
+
+
+
+
+
+                    <div class="form-group">
+                        <label>Rating </label>
+
+                        <div >
+                            <fieldset class="rating" name="rating">
+                                <input type="radio" id="star15" name="rating" value="5"/><label class="full" for="star15"
+                                                                                               title="Awesome - 5 stars"></label>
+                                <!--<input type="radio" id="star4half" name="rating" value="4" /><label class="half" for="star4half" title="Pretty good - 4.5 stars"></label>-->
+                                <input type="radio" id="star14" name="rating" value="4"/><label class="full" for="star14"
+                                                                                               title="Pretty good - 4 stars"></label>
+                                <!--<input type="radio" id="star3half" name="rating" value="3" /><label class="half" for="star3half" title="Meh - 3.5 stars"></label>-->
+                                <input type="radio" id="star13" name="rating" value="3"/><label class="full" for="star13"
+                                                                                               title="Meh - 3 stars"></label>
+                                <!--<input type="radio" id="star2half" name="rating" value="2" /><label class="half" for="star2half" title="Kinda bad - 2.5 stars"></label>-->
+                                <input type="radio" id="star12" name="rating" value="2"/><label class="full" for="star12"
+                                                                                               title="Kinda bad - 2 stars"></label>
+                                <!--<input type="radio" id="star1half" name="rating" value="1" /><label class="half" for="star1half" title="Meh - 1.5 stars"></label>-->
+                                <input type="radio" id="star11" name="rating" value="1"/><label class="full" for="star11"
+                                                                                               title="Sucks big time - 1 star"></label>
+                                <!--<input type="radio" id="starhalf" name="rating" value="0" /><label class="half" for="starhalf" title="Sucks big time - 0.5 stars"></label>-->
+                            </fieldset>
+                        </div>
+                    </div>
+                    <br/>
+                    <!-- Text input-->
+
+                    <div class="form-group">
+                        <label for="textinput25">Comment</label>
+                        <div>
+                        <textarea rows="5" id="textinput25" name="textinput25"
+                                  class="form-control input-md" th:field="*{content}"></textarea>
+
+                        </div>
+                    </div>
+
+
+                    <br/>
+                    <br/>
+                    <!-- Button -->
+
+                    <button type="submit" class="btn btn-primary btn-block">Submit</button>
+
+
+                </form>
+
+            <div class="text-center">
+
+                <a class="d-block medium" href="/trainer">Return to user profile</a>
+            </div>
+            </div>
+            <!--TRAINER SECTION -->
+        </div>
+    </div>
+</div>
+<!-- Bootstrap core JavaScript-->
+<script src="/vendor/jquery/jquery.min.js"></script>
+<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- Core plugin JavaScript-->
+<script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+</body>
+
+</html>

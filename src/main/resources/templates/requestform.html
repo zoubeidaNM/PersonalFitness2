@@ -124,12 +124,15 @@
                 </div>
                 <!-- Text input-->
                 <div class="form-group">
-                    <label class=for="textinput">Area</label>
+                    <label class=for="sel3">Area</label>
                     <div>
-                        <input id="textinput4" name="textinput4" placeholder="area" class="form-control input-md"
-                         type="text" th:field="*{area}">
-                        <span th:if="${#fields.hasErrors('area')}"
-                              th:errors="*{area}">Area error</span>
+                        <select class="form-control" id="sel3" th:name="area" th:field="*{area}">
+                            <option th:each="a :${areas}" th:value="${a.name}" th:text="${a.name}"></option>
+                        </select>
+                        <!--<input id="textinput4" name="textinput4" placeholder="area" class="form-control input-md"-->
+                         <!--type="text" th:field="*{area}">-->
+                        <!--<span th:if="${#fields.hasErrors('area')}"-->
+                              <!--th:errors="*{area}">Area error</span>-->
 
                     </div>
                 </div>
@@ -138,7 +141,7 @@
                 <div class="form-group">
                     <label for="tags">Trainer Name</label>
                     <div>
-                        <input id="tags" name="textinput5" placeholder="trainer name"
+                       <input id="tags" name="textinput5" placeholder="trainer name"
                                class="form-control input-md" type="text" th:field="*{receiverName}">
                         <span th:if="${#fields.hasErrors('receiverName')}"
                               th:errors="*{receiverName}">Trainer name error</span>

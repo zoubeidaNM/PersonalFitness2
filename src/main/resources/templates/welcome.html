@@ -22,8 +22,8 @@
 
             <div sec:authorize="isAuthenticated()">
 
-                <div sec:authorize="hasAuthority('TRAINER')">
-                    <h1 th:field="*{user}" th:inline="text" class="text-center">Hello trainer [[${user.firstName}]] </h1>
+                <div sec:authorize ="hasAuthority('ADMIN') ">
+                    <h1 th:field="*{user}" th:inline="text" class="text-center">Hello admin [[${user.firstName}]]</h1>
                     <br/>
                     <br/>
                     <a href="/trainer">
@@ -32,11 +32,11 @@
                 </div>
 
 
-                <div sec:authorize="hasAuthority('ADMIN')">
-                    <h1 th:field="*{user}" th:inline="text" class="text-center">Hello admin [[${user.firstName}]]</h1>
+                <div sec:authorize="hasAuthority('TRAINER') and !hasAuthority('ADMIN')">
+                    <h1 th:field="*{user}" th:inline="text" class="text-center">Hello trainer [[${user.firstName}]] </h1>
                     <br/>
                     <br/>
-                    <a href="/admin">
+                    <a href="/trainer">
                         <button type="submit" class="btn btn-primary btn-block">Go to Profile</button>
                     </a>
                 </div>

@@ -86,18 +86,40 @@ public class FitnessUser {
 
     private boolean trainerRequestFlag;
 
+    public int getAverageRating() {
+        return averageRating;
+    }
+
+    public void setAverageRating(int averageRating) {
+        this.averageRating = averageRating;
+    }
+
+    private int averageRating;
+
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(joinColumns = @JoinColumn(name ="user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Collection<UserRole> roles;
 
 
+    public Set<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(Set<Comment> comments) {
+        this.comments = comments;
+    }
+
+    @ManyToMany
+    public Set<Comment> comments;
 
     @ManyToMany
     private Set<Request> requests;
 
     @ManyToMany
     private Set<Request> trainerDeclinedRequests;
+
+    ArrayList<String> ratableUserNames;
 
 
 
@@ -107,6 +129,8 @@ public class FitnessUser {
         roles = new HashSet<UserRole>();
         requests= new HashSet<Request>();
         trainerDeclinedRequests = new HashSet<Request>();
+        ratableUserNames = new ArrayList<String>();
+        averageRating=0;
 
         areas.add("Montgomery County");
         areas.add("Frederick County");
@@ -302,5 +326,28 @@ public class FitnessUser {
     public void discardDeniedRequest(Request request){
         requests.remove(request);
         trainerDeclinedRequests.add(request);
+    }
+    public void addComment(Comment comment){comments.add(comment);}
+
+    public void computeAverageRating(){
+        int commentSum=0;
+
+        for(Comment c:comments){
+            commentSum=commentSum+c.getRating();
+        }
+        averageRating= commentSum/comments.size();
+
+    }
+
+    public ArrayList<String> getRatableUserNames() {
+        return ratableUserNames;
+    }
+
+    public void setRatableUserNames(ArrayList<String> ratableUserNames) {
+        this.ratableUserNames = ratableUserNames;
+    }
+
+    public void addRatableUserName(String name){
+        ratableUserNames.add(name);
     }
 }

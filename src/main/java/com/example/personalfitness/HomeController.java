@@ -13,6 +13,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Map;
 import java.util.Set;
 
@@ -30,15 +31,17 @@ public class HomeController {
 
 
     @Autowired
-    StringRepository areas;
+    NameRepository areas;
 
     @Autowired
-    StringRepository Specialties;
-    
+    NameRepository specialties;
+
 
     @Autowired
     CloudinaryConfig cloudc;
 
+    @Autowired
+    CommentRepository commentRepository;
     @RequestMapping("/")
     public String index(){
         return "homepage";
@@ -71,7 +74,8 @@ public class HomeController {
 
 
         FitnessUser user = userRepository.findByUsername(principal.getName());
-
+        System.out.println("User: "+user.getUsername() );
+        System.out.println("Comments size: "+user.getComments().size());
         model.addAttribute("user", user);
         return "trainer";
     }
@@ -123,12 +127,15 @@ public class HomeController {
     public String showRequest(Model model){
 
         Request request = new Request();
+
         //set default dates
         request.setDay(1);
         request.setYear(2017);
         request.setHours(14);
         request.setMinutes(30);
 
+
+        // get the names of the trainers for the autocomlete
         ArrayList<String> trainerNames = new ArrayList<String>();
 
         Iterable<FitnessUser> users =  userRepository.findAll();
@@ -145,6 +152,9 @@ public class HomeController {
          names = trainerNames.toArray(names);
 
         model.addAttribute("names", names);
+
+        //get the areas
+        model.addAttribute("areas", areas.findAll());
 
         model.addAttribute("request", request);
         return "requestform";
@@ -195,6 +205,7 @@ public class HomeController {
 
         FitnessUser trainerUser = userRepository.findByUsername(principal.getName());
         Request request = requestRepository.findOne(id);
+        FitnessUser user = userRepository.findByUsername(request.getSenderName());
 
          if (acceptOrDecline.equalsIgnoreCase("accept")) {
             // user clicked "accept"
@@ -202,6 +213,8 @@ public class HomeController {
             request.setShowTrainer(true);
             request.setReceiverAnswer("Accepted");
             request.setStatus("Accepted");
+            trainerUser.addRatableUserName(user.getUsername());
+            user.addRatableUserName(trainerUser.getUsername());
 
         } else if (acceptOrDecline.equalsIgnoreCase("decline")) {
             // user clicked "decline"
@@ -213,7 +226,6 @@ public class HomeController {
         }
 
         requestRepository.save(request);
-        FitnessUser user = userRepository.findByUsername(request.getSenderName());
         user.setUserRequestFlag(true);
         trainerUser.setTrainerRequestFlag(false);
         model.addAttribute("user", trainerUser);
@@ -221,6 +233,87 @@ public class HomeController {
         return "redirect:/trainer";
     }
 
+    @RequestMapping("/user/comment")
+    public String showComment(Principal principal, Model model){
+        FitnessUser user = userRepository.findByUsername(principal.getName());
+
+        Comment comment = new Comment();
+        model.addAttribute("user", user);
+        model.addAttribute("comment", comment);
+        return "commentform";
+    }
+    /* ProcessFormText*/
+    @PostMapping("/user/comment")
+    public String processUserComment(Principal principal, @Valid @ModelAttribute("comment") Comment comment, @RequestParam("rating")int rating,
+                                     BindingResult result, Model model) {
+        FitnessUser user = userRepository.findByUsername(principal.getName());
+        if (result.hasErrors()) {
+            System.out.println(result.toString());
+            return "commentform";
+        }
+
+        System.out.println ("Rating: "+ rating );
+        Calendar calendar = Calendar.getInstance();
+        java.sql.Date ourJavaDateObject = new java.sql.Date(calendar.getTime().getTime());
+//        String username = principal.getName();
+//        FitnessUser user_current = userRepository.findByUsername(username);
+        comment.addUser(user);
+        comment.setSentby(user.getUsername());
+        comment.setPosteddate(ourJavaDateObject);
+        comment.setRating ( rating );
+        FitnessUser trainer=userRepository.findByUsername(comment.getTrainerName());
+        comment.setUserName(user.getUsername());
+        commentRepository.save(comment);
+        trainer.addComment(comment);
+        trainer.computeAverageRating();
+        System.out.println("Trainer: "+trainer.getUsername());
+        System.out.println("Comments size: "+trainer.getComments().size());
+        userRepository.save(trainer);
+        model.addAttribute("user", user);
+        return "user";
+
+    }
+
+
+    @RequestMapping("/trainer/comment")
+    public String showTrainerComment(Principal principal,Model model){
+        FitnessUser user = userRepository.findByUsername(principal.getName());
+
+        Comment comment = new Comment();
+        model.addAttribute("user", user);
+        model.addAttribute("comment", comment);
+        return "commentform";
+    }
+    /* ProcessFormText*/
+    @PostMapping("/trainer/comment")
+    public String processTrainerComment(Principal principal, @Valid @ModelAttribute("comment") Comment comment, @RequestParam("rating")int rating,
+                                     BindingResult result, Model model) {
+        FitnessUser user = userRepository.findByUsername(principal.getName());
+        if (result.hasErrors()) {
+            System.out.println(result.toString());
+            return "commentform";
+        }
+
+        System.out.println ("Rating: "+ rating );
+        Calendar calendar = Calendar.getInstance();
+        java.sql.Date ourJavaDateObject = new java.sql.Date(calendar.getTime().getTime());
+        comment.addUser(user);
+        comment.setSentby(user.getUsername());
+        comment.setPosteddate(ourJavaDateObject);
+        comment.setRating ( rating );
+        FitnessUser userAbout=userRepository.findByUsername(comment.getUserName());
+        comment.setTrainerName(user.getUsername());
+        commentRepository.save(comment);
+        userAbout.addComment(comment);
+        userAbout.computeAverageRating();
+        System.out.println("userAbout: "+userAbout.getUsername());
+        System.out.println("Comments size: "+userAbout.getComments().size());
+
+        userRepository.save(userAbout);
+        model.addAttribute("user", user);
+        return "trainer";
+
+    }
 
     @RequestMapping("/user/choosepic")
     public String choosePicture(Principal principal, Model model){
@@ -296,6 +389,30 @@ public class HomeController {
         }
 
         return "trainer";
+    }
+
+
+    @RequestMapping("/user/search")
+    public String trainerSearch(Principal principal, Model model) {
+        ArrayList<FitnessUser> trainers = new ArrayList<FitnessUser>();
+
+        Iterable<FitnessUser> users =  userRepository.findAll();
+
+        for(FitnessUser user:users){
+            for(UserRole role: (user.getRoles())){
+                if (role.getRole().equalsIgnoreCase("TRAINER")){
+                    trainers.add(user);
+                    System.out.println(user.getUsername());
+                }
+            }
+        }
+        FitnessUser user = userRepository.findByUsername(principal.getName());
+
+        System.out.println(trainers.size());
+        model.addAttribute("trainers", trainers);
+        model.addAttribute("user", user);
+
+        return "searchresult";
     }
 
 
