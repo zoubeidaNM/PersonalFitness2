@@ -119,7 +119,7 @@ public class FitnessUser {
         specialities.add("Aerobics");
         specialities.add("Dance");
 
-        headshot="/images/pic04.jpg";
+        headshot="/images/pic01.jpg";
 
         userRequestFlag = false;
         trainerRequestFlag = false;

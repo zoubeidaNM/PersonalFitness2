@@ -112,12 +112,12 @@ class DataLoader implements CommandLineRunner {
 
         user = new FitnessUser();
 
-        user.setFirstName("Admin");
-        user.setLastName("Admin");
-        user.setEmail("admin@admin.com");
+        user.setFirstName("Shaun");
+        user.setLastName("Roberts");
+        user.setEmail("shaun@personalfit.com");
         user.setContactNumber("301-444-5555");
         user.setEnabled(true);
-        user.setUsername("admin");
+        user.setUsername("Shaun11");
         user.setPassword("pass");
         user.setRoles(Arrays.asList(trainerRole, adminRole));
         user.setFitnessLevel("Beginner");
@@ -125,6 +125,72 @@ class DataLoader implements CommandLineRunner {
         user.setGender("Male");
         user.setNeedOrSpecialty("Dance");
         userRepository.save(user);
+
+        user = new FitnessUser();
+
+        user.setFirstName("Tony");
+        user.setLastName("Stevenson");
+        user.setEmail("Tony@personalfit.com");
+        user.setContactNumber("301-444-5566");
+        user.setEnabled(true);
+        user.setUsername("Tony23");
+        user.setPassword("pass");
+        user.setRoles(Arrays.asList(trainerRole, adminRole));
+        user.setFitnessLevel("Beginner");
+        user.setArea("All");
+        user.setGender("Male");
+        user.setNeedOrSpecialty("Dance");
+        userRepository.save(user);
+
+        user = new FitnessUser();
+
+        user.setFirstName("Michelle");
+        user.setLastName("Okeefe");
+        user.setEmail("michelle@personalfit.com");
+        user.setContactNumber("301-444-7777");
+        user.setEnabled(true);
+        user.setUsername("MichelleO");
+        user.setPassword("pass");
+        user.setRoles(Arrays.asList(trainerRole, adminRole));
+        user.setFitnessLevel("Beginner");
+        user.setArea("All");
+        user.setGender("Female");
+        user.setNeedOrSpecialty("Dance");
+        userRepository.save(user);
+
+        user = new FitnessUser();
+
+        user.setFirstName("Danielle");
+        user.setLastName("guthrie");
+        user.setEmail("danielle@personalfit.com");
+        user.setContactNumber("301-444-3366");
+        user.setEnabled(true);
+        user.setUsername("Danielle");
+        user.setPassword("pass");
+        user.setRoles(Arrays.asList(trainerRole, adminRole));
+        user.setFitnessLevel("Beginner");
+        user.setArea("All");
+        user.setGender("Female");
+        user.setNeedOrSpecialty("Dance");
+        userRepository.save(user);
+
+        user = new FitnessUser();
+
+        user.setFirstName("nathalie");
+        user.setLastName("gates");
+        user.setEmail("nathalie@personalfit.com");
+        user.setContactNumber("301-444-8899");
+        user.setEnabled(true);
+        user.setUsername("nathalie03");
+        user.setPassword("pass");
+        user.setRoles(Arrays.asList(trainerRole, adminRole));
+        user.setFitnessLevel("Beginner");
+        user.setArea("All");
+        user.setGender("Male");
+        user.setNeedOrSpecialty("Dance");
+        userRepository.save(user);
+
+
 
     }
 }

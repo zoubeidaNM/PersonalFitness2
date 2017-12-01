@@ -16,32 +16,10 @@
     <link href="/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <!-- Custom styles for this template-->
     <link href="/css/sb-admin.css" rel="stylesheet">
-    <script>
+    <!--script for autocomplete trainer names-->
+    <script th:inline="javascript">
         $( function() {
-            var availableTags = [[$trainers[
-                "ActionScript",
-                "AppleScript",
-                "Asp",
-                "BASIC",
-                "C",
-                "C++",
-                "Clojure",
-                "COBOL",
-                "ColdFusion",
-                "Erlang",
-                "Fortran",
-                "Groovy",
-                "Haskell",
-                "Java",
-                "JavaScript",
-                "Lisp",
-                "Perl",
-                "PHP",
-                "Python",
-                "Ruby",
-                "Scala",
-                "Scheme"
-            ];
+            var availableTags = [[${names}]];
             $( "#tags" ).autocomplete({
                 source: availableTags
             });
@@ -101,11 +79,10 @@
                     <div class="col-md-4">
                         <!-- Text input-->
                         <div class="form-group">
-                            <label for="textinput2">Year</label>
+                            <label for="numberinput2">Year</label>
                             <div>
-                                <input id="textinput2" name="textinput" placeholder="year" class="form-control input-md"
-                                       type="number"
-                                       min="2017" max="20000" step="1" value="2017" th:field="*{year}"/>
+                                <input id="numberinput2" name="textinput" placeholder="year" class="form-control input-md"
+                                       th:field="*{year}" type="number" min="2017" max="20000" step="1" value="2017" />
 
                             </div>
                         </div>
@@ -118,7 +95,7 @@
                 <div class="form-row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="textinput3">Hour</label>
+                            <label for="textinput3">Hour (24 hours format)</label>
                             <div>
                                 <input id="textinput3" name="textinput" placeholder="hour" class="form-control input-md"
                                        type="number"
@@ -137,7 +114,7 @@
                             <div>
                                 <input id="textinput" name="textinput" placeholder="minutes"
                                        class="form-control input-md" type="number"
-                                       min="0" max="59" step="1" value="0" th:field="*{minutes}"/>
+                                       min="0" max="59" step="1" value="30" th:field="*{minutes}"/>
 
                             </div>
                         </div>
@@ -187,10 +164,7 @@
 
 
 <!-- Bootstrap core JavaScript-->
-<script src="/vendor/jquery/jquery.min.js"></script>
 <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-<!-- Core plugin JavaScript-->
-<script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
 </body>
 
 </html>

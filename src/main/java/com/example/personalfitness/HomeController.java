@@ -28,6 +28,14 @@ public class HomeController {
     @Autowired
     RequestRepository requestRepository;
 
+
+    @Autowired
+    StringRepository areas;
+
+    @Autowired
+    StringRepository Specialties;
+    
+
     @Autowired
     CloudinaryConfig cloudc;
 
@@ -115,6 +123,11 @@ public class HomeController {
     public String showRequest(Model model){
 
         Request request = new Request();
+        //set default dates
+        request.setDay(1);
+        request.setYear(2017);
+        request.setHours(14);
+        request.setMinutes(30);
 
         ArrayList<String> trainerNames = new ArrayList<String>();
 
