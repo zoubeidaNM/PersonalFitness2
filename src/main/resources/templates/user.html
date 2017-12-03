@@ -18,6 +18,9 @@
     </noscript>
     <!-- Custom fonts for this template-->
     <link href="/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <!-- Custom scripts for all pages-->
+    <script src="/js/sb-admin.min.js"></script>
+
 
 </head>
 <body id="top">
@@ -29,10 +32,12 @@
 <!--</header>-->
 <header2 th:fragment="header2" id="header2" class="skel-layers-fixed">
     <h1><a href="#">User</a></h1>
-    <nav id="nav2">
+    <nav class="collapse navbar-collapse" id="nav2">
         <ul>
-            <li><a href="/user" th:if="${user.userRequestFlag}"><i class="icon2 fa-bell major4"></i> New Request</a></li>
-            <li><a href="/user">Profile</a></li>
+             <li><a href="/user">home</a></li>
+            <li><span  href="#" th:if="${user.userRequestFlag}"><i class="fa fa-fw fa-bell" style="color:red;"></i>
+                <span style="color:red;">New Request</span></span></li>
+            <span  href="#" th:unless="${user.userRequestFlag}"><i class="fa fa-fw fa-bell"></i></span></li>
             <li><a href="/user/request">Add Request</a></li>
             <li><a href="/user/comment">Rate Trainer</a></li>
             <li><a href="/user/search">Show Trainers</a></li>
@@ -43,8 +48,8 @@
 </header2>
 <!-- Main -->
 <section id="main" class="wrapper style2">
-    <header class="major">
-        <h2 th:inline="text">Welcome [[${user.username}]]</h2>
+    <header class="major2">
+        <h2  th:inline="text">Welcome [[${user.username}]]</h2>
     </header>
     <div class="container">
         <div class="row">
@@ -58,31 +63,30 @@
                     </ul>
                 </section>
                 <section class="box_white">
-                    <h3 class="special">Rating Average </h3>
+                    <h3 class="special align-center">Rating Average </h3>
 
-                    <div class="row">
+                    <div class ="align-center">
 
-                        <div class="8u" th:if="${user.averageRating == 0}">
-                            <label th:inline="text"><i class ="fa fa-star-o"></i><i class ="fa fa-star-o"></i>
-                                <i class ="fa fa-star-o"></i><i class ="fa fa-star-o"></i><i class ="fa fa-star-o"></i></label>
+                        <div  th:if="${user.averageRating == 0}">
+                            <label th:inline="text"><i class ="fa fa-star-o"></i><i class ="fa fa-star-o"></i><i class ="fa fa-star-o"></i><i class ="fa fa-star-o"></i><i class ="fa fa-star-o"></i></label>
                         </div>
-                        <div class="8u" th:if="${user.averageRating == 1}">
+                        <div  th:if="${user.averageRating == 1}">
                             <label th:inline="text"><i class ="fa fa-star" style="color:yellow;"></i></label>
                         </div>
-                        <div class="8u" th:if="${user.averageRating == 2}">
+                        <div  th:if="${user.averageRating == 2}">
                             <label th:inline="text"><i class ="fa fa-star"style="color:yellow;"></i>
                                 <i class ="fa fa-star"style="color:yellow;"></i></label>
                         </div>
-                        <div class="8u" th:if="${user.averageRating == 3}">
+                        <div  th:if="${user.averageRating == 3}">
                             <label th:inline="text"><i class ="fa fa-star" style="color:yellow;"></i><i class ="fa fa-star" style="color:yellow;">
 
                             </i><i class ="fa fa-star" style="color:yellow;"></i></label>
                         </div>
-                        <div class="8u" th:if="${user.averageRating == 4}">
+                        <div  th:if="${user.averageRating == 4}">
                             <label th:inline="text"><i class ="fa fa-star" style="color:yellow;"></i><i class ="fa fa-star" style="color:yellow;"></i>
                                 <i class ="fa fa-star" style="color:yellow;"></i><i class ="fa fa-star" style="color:yellow;"></i></label>
                         </div>
-                        <div class="8u" th:if="${user.averageRating == 5}">
+                        <div th:if="${user.averageRating == 5}">
                             <label th:inline="text"><i class ="fa fa-star" style="color:yellow;"></i><i class ="fa fa-star" style="color:yellow;">
 
                             </i><i class ="fa fa-star" style="color:yellow;"></i><i class ="fa fa-star" style="color:yellow;"></i>
@@ -90,11 +94,6 @@
                         </div>
 
                     </div>
-
-
-
-
-
                     <hr/>
                     <div th:each="comment :${user.comments}">
 

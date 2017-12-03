@@ -20,65 +20,53 @@ public class FitnessUser {
 
     @NotNull
     @NotEmpty
-    @Column(name="first_name")
+    @Column(name = "first_name")
     private String firstName;
 
     @NotNull
     @NotEmpty
-    @Column(name="last_name")
+    @Column(name = "last_name")
     private String lastName;
 
 
     @NotNull
     @NotEmpty
-    @Column(name="email")
+    @Column(name = "email")
     private String email;
 
     @NotNull
     @NotEmpty
-    @Column(name="contact")
+    @Column(name = "contact")
     private String contactNumber;
 
     @NotNull
     @NotEmpty
-    @Column(name="fitness_level")
+    @Column(name = "fitness_level")
     private String fitnessLevel;
 
 
     // Trainer will choose ALL.
-    @NotNull
-    @NotEmpty
-    @Column(name="area")
+
+    @Column(name = "area")
     private String area;
 
-    @Column(name="gender")
+    @Column(name = "gender")
     private String gender;
 
-    @NotNull
-    @NotEmpty
-    @Column(name="need_or_specialty")
-    private String needOrSpecialty;
-
-
-    @Column(name="enabled")
+    @Column(name = "enabled")
     private boolean enabled;
 
-
-    @Column(name="password")
+    @Column(name = "password")
     @NotEmpty
     @NotNull
-    @Size(min=2, max=20)
+    @Size(min = 2, max = 20)
     private String password;
 
-    @Column(name="username", unique=true)
+    @Column(name = "username", unique = true)
     @NotEmpty
     @NotNull
-    @Size(min=2, max=20)
+    @Size(min = 2, max = 20)
     private String username;
-
-    private ArrayList<String> areas;
-
-    private ArrayList<String> specialities;
 
     private String headshot;
 
@@ -86,29 +74,16 @@ public class FitnessUser {
 
     private boolean trainerRequestFlag;
 
-    public int getAverageRating() {
-        return averageRating;
-    }
-
-    public void setAverageRating(int averageRating) {
-        this.averageRating = averageRating;
-    }
-
     private int averageRating;
 
+    private boolean suspended;
+
+    ArrayList<String> ratableUserNames;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(joinColumns = @JoinColumn(name ="user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @JoinTable(joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Collection<UserRole> roles;
 
-
-    public Set<Comment> getComments() {
-        return comments;
-    }
-
-    public void setComments(Set<Comment> comments) {
-        this.comments = comments;
-    }
 
     @ManyToMany
     public Set<Comment> comments;
@@ -119,34 +94,24 @@ public class FitnessUser {
     @ManyToMany
     private Set<Request> trainerDeclinedRequests;
 
-    ArrayList<String> ratableUserNames;
+    @ManyToMany
+    private Set<Specialty> specialties;
 
 
 
     public FitnessUser() {
-        areas = new ArrayList<String>();
-        specialities = new ArrayList<String>();
         roles = new HashSet<UserRole>();
-        requests= new HashSet<Request>();
+        requests = new HashSet<Request>();
+        specialties = new HashSet<Specialty>();
         trainerDeclinedRequests = new HashSet<Request>();
         ratableUserNames = new ArrayList<String>();
-        averageRating=0;
+        averageRating = 0;
 
-        areas.add("Montgomery County");
-        areas.add("Frederick County");
-        areas.add("Prince George's County");
-        areas.add("All");
-
-        specialities.add("Weight Training");
-        specialities.add("Martial Arts ");
-        specialities.add("Water Sports");
-        specialities.add("Aerobics");
-        specialities.add("Dance");
-
-        headshot="/images/pic01.jpg";
+        headshot = "/images/pic01.jpg";
 
         userRequestFlag = false;
         trainerRequestFlag = false;
+        suspended = false;
 
     }
 
@@ -223,14 +188,6 @@ public class FitnessUser {
         this.gender = gender;
     }
 
-    public String getNeedOrSpecialty() {
-        return needOrSpecialty;
-    }
-
-    public void setNeedOrSpecialty(String needOrSpecialty) {
-        this.needOrSpecialty = needOrSpecialty;
-    }
-
     public boolean isEnabled() {
         return enabled;
     }
@@ -263,31 +220,12 @@ public class FitnessUser {
         this.roles = roles;
     }
 
-    public ArrayList<String> getAreas() {
-        return areas;
+
+    public void addSpecialty(Specialty specialty) {
+        specialties.add(specialty);
     }
 
-    public void setAreas(ArrayList<String> areas) {
-        this.areas = areas;
-    }
-
-    public ArrayList<String> getSpecialities() {
-        return specialities;
-    }
-
-    public void setSpecialities(ArrayList<String> specialities) {
-        this.specialities = specialities;
-    }
-
-    public void addArea(String area){
-        areas.add(area);
-    }
-
-    public void addSpeciality(String speciality){
-        specialities.add(speciality);
-    }
-
-    public void addRequest(Request request){
+    public void addRequest(Request request) {
         requests.add(request);
     }
 
@@ -323,20 +261,47 @@ public class FitnessUser {
         this.trainerDeclinedRequests = trainerDeclinedRequests;
     }
 
-    public void discardDeniedRequest(Request request){
+    public int getAverageRating() {
+        return averageRating;
+    }
+
+    public void setAverageRating(int averageRating) {
+        this.averageRating = averageRating;
+    }
+
+    public void discardDeniedRequest(Request request) {
         requests.remove(request);
         trainerDeclinedRequests.add(request);
     }
-    public void addComment(Comment comment){comments.add(comment);}
 
-    public void computeAverageRating(){
-        int commentSum=0;
+    public void addComment(Comment comment) {
+        comments.add(comment);
+    }
 
-        for(Comment c:comments){
-            commentSum=commentSum+c.getRating();
+    public void computeAverageRating() {
+        int commentSum = 0;
+
+        for (Comment c : comments) {
+            commentSum = commentSum + c.getRating();
         }
-        averageRating= commentSum/comments.size();
+        averageRating = commentSum / comments.size();
 
+    }
+
+    public Set<Specialty> getSpecialties() {
+        return specialties;
+    }
+
+    public void setSpecialties(Set<Specialty> specialties) {
+        this.specialties = specialties;
+    }
+
+    public Set<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(Set<Comment> comments) {
+        this.comments = comments;
     }
 
     public ArrayList<String> getRatableUserNames() {
@@ -347,7 +312,15 @@ public class FitnessUser {
         this.ratableUserNames = ratableUserNames;
     }
 
-    public void addRatableUserName(String name){
+    public boolean isSuspended() {
+        return suspended;
+    }
+
+    public void setSuspended(boolean suspended) {
+        this.suspended = suspended;
+    }
+
+    public void addRatableUserName(String name) {
         ratableUserNames.add(name);
     }
 }

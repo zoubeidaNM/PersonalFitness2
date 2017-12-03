@@ -28,73 +28,106 @@
     </noscript>
 </head>
 
-<body class="body_bg2">
+<body class="body_bg3">
 
 <!-- Headers-->
 <div th:replace="homepage::header1"></div>
 <div sec:authorize="hasAuthority('USER')">
     <div th:replace="user::header2"></div>
 </div>
-<!--<div sec:authorize="hasAuthority('RECRUITER')">-->
-    <!--<div th:replace="recruiterprofile::header2"></div>-->
-<!--</div>-->
-<div class="container">
+<div sec:authorize="hasAuthority('TRAINER')">
+    <div th:replace="trainer::header2"></div>
+</div>
+
+
+
+<div  class="container">
     <h3></h3>
-    <h3></h3>
-    <hr/>
-    <h3 class="text-center" th:inline="text">List of all Trainers</h3>
-    <hr/>
-    <table class="table table-striped table-bordered table-hover table-responsive">
-        <tr>
-            <th>Trainer Name</th>
-            <th>Specialty</th>
+    <div sec:authorize="hasAuthority('USER')">
+    <h3 class="text-center search_h3" th:inline="text">List of all Trainers</h3>
+    </div>
+
+    <div sec:authorize="hasAuthority('TRAINER')">
+        <h3 class="text-center search_h3" th:inline="text">List of all Users</h3>
+        <hr/>
+    </div>
+    <div class="container" sec:authorize="hasAuthority('USER')">
+        <section class="box_white">
+            <form action="#" th:action="@{/user/search}" method="post" class="form_bg">
+
+                <div class="row inputst">
+                    <label class="3u labelst">Narrow search by:</label>
+                    <div class="form-group 6u">
+                        <select class="form-control" id="sel1" name="searchField">
+                            <option th:value="name">Name</option>
+                            <option th:value="fitnessLevel">FitnessLevel</option>
+                            <option th:value="gender">Gender</option>
+                            <option th:value="specialty">Specialty</option>
+                            <option th:value="rating">Rating (enter number from 1 to 5)</option>
+                        </select>
+                    </div>
+                    <span class="3u"></span>
+                </div>
+                <div class="row">
+                    <label class="3u labelst"> Search <span class="glyphicon glyphicon-search"></span> :</label>
+                    <div class="form-group 6u">
+                    <input type="text" name="searchStr" class="form-control" placeholder="Enter search string"/>
+                    </div>
+                    <div class="3u"><input type="submit" value="Search"/></div>
+                 </div>
+            </form>
+        </section>
+    </div>
+    <div class="container">
+    <section class="box_white">
+       <table class="table  table-striped table-hover table-responsive">
+            <tr>
+                <th>Trainer Name</th>
+            <th>Need/Specialty</th>
             <th>Level</th>
             <th>Rating</th>
-            <td>Actions</td>
+            <th sec:authorize="hasAuthority('USER')">Actions</th>
         </tr>
-        <tr th:each="user : ${trainers}">
+        <tr class="active"  th:each="user : ${searchedUsers}" th:unless="${user.suspended}">
             <td th:text="${user.username}"></td>
-            <td th:text="${user.needOrSpecialty}"></td>
+            <td><span th:each="s :${user.specialties}"><a th:text="${s.name}"> - </a></span></td>
             <td th:text="${user.fitnessLevel}"></td>
-            <td>   <div class="row">
+            <td>
 
-                <div class="8u" th:if="${user.averageRating == 0}">
-                    <label th:inline="text"><i class ="fa fa-star-o"></i><i class ="fa fa-star-o"></i>
-                        <i class ="fa fa-star-o"></i><i class ="fa fa-star-o"></i><i class ="fa fa-star-o"></i></label>
+                <div th:if="${user.averageRating == 0}">
+                    <label><i class ="fa fa-star-o"></i><i class ="fa fa-star-o"></i><i class ="fa fa-star-o"></i><i class ="fa fa-star-o"></i><i class ="fa fa-star-o"></i></label>
                 </div>
-            <div class="8u" th:if="${user.averageRating == 1}">
-                <label th:inline="text"><i class ="fa fa-star" style="color:yellow;"></i></label>
+            <div  th:if="${user.averageRating == 1}">
+                <label ><i class ="fa fa-star" style="color:yellow;"></i></label>
             </div>
-            <div class="8u" th:if="${user.averageRating == 2}">
-                <label th:inline="text"><i class ="fa fa-star"style="color:yellow;"></i>
+            <div  th:if="${user.averageRating == 2}">
+                <label ><i class ="fa fa-star"style="color:yellow;"></i>
                     <i class ="fa fa-star"style="color:yellow;"></i></label>
             </div>
-            <div class="8u" th:if="${user.averageRating == 3}">
-                <label th:inline="text"><i class ="fa fa-star" style="color:yellow;"></i><i class ="fa fa-star" style="color:yellow;">
+            <div th:if="${user.averageRating == 3}">
+                <label><i class ="fa fa-star" style="color:yellow;"></i><i class ="fa fa-star" style="color:yellow;">
 
                 </i><i class ="fa fa-star" style="color:yellow;"></i></label>
             </div>
-            <div class="8u" th:if="${user.averageRating == 4}">
-                <label th:inline="text"><i class ="fa fa-star" style="color:yellow;"></i><i class ="fa fa-star" style="color:yellow;"></i>
+            <div  th:if="${user.averageRating == 4}">
+                <label><i class ="fa fa-star" style="color:yellow;"></i><i class ="fa fa-star" style="color:yellow;"></i>
                     <i class ="fa fa-star" style="color:yellow;"></i><i class ="fa fa-star" style="color:yellow;"></i></label>
             </div>
-            <div class="8u" th:if="${user.averageRating == 5}">
-                <label th:inline="text"><i class ="fa fa-star" style="color:yellow;"></i><i class ="fa fa-star" style="color:yellow;">
+            <div  th:if="${user.averageRating == 5}">
+                <label><i class ="fa fa-star" style="color:yellow;"></i><i class ="fa fa-star" style="color:yellow;">
 
                 </i><i class ="fa fa-star" style="color:yellow;"></i><i class ="fa fa-star" style="color:yellow;"></i>
                     <i class ="fa fa-star" style="color:yellow;"></i></label>
             </div>
 
-        </div></td>
-            <td>
-                <a sec:authorize="hasAuthority('USER')"
-                   th:href="@{/user/details/{id}(id=${user.id})}">Send Request</a>
-                <a sec:authorize="hasAuthority('TRAINER')"
-                   th:href="@{/recruiter/details/{id}(id=${user.id})}">details</a>
-
+        </td>
+            <td sec:authorize="hasAuthority('USER')">
+                <a th:href="@{/user/request/{id}(id=${user.id})}">Send Request</a>
             </td>
         </tr>
     </table>
+    </section>
+</div>
 </div>
 
 

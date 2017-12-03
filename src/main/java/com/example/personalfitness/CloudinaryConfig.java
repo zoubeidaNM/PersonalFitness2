@@ -41,7 +41,7 @@ public class CloudinaryConfig {
     {
         //This method generates the URL for the actor's list
        // return cloudinary.url().transformation( new Transformation().width(100).height(100).crop("fill").radius(50).gravity("face")
-        return cloudinary.url().transformation( new Transformation().width(100).height(100)).generate(name);
+        return cloudinary.url().transformation( new Transformation().crop("fill")).generate(name);
 
     }
 

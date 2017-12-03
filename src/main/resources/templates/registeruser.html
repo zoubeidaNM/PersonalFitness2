@@ -58,18 +58,19 @@
                   th:errors="*{contactNumber}">Contact number error</span>
           </div>
           <div class="form-group">
-            <label for="sel2">Fitness Level:</label>
+            <label for="sel2">Fitness Level: (trainer choose "All")</label>
             <select class="form-control" id="sel2" th:name="fitnessLevel">
               <option th:value="Beginner">Beginner</option>
               <option th:value="Intermediate">Intermediate</option>
               <option th:value="Advanced">Advanced</option>
+              <option th:value="All">All</option>
             </select>
           </div>
 
           <div class="form-group">
-            <label for="sel3">Area:</label>
+            <label for="sel3">Area: (trainer choose "All")</label>
             <select class="form-control" id="sel3" th:name="area" th:field="*{area}">
-              <option th:each="a :${user.areas}" th:value="${a}" th:text="${a}"></option>
+              <option th:each="a :${areas}"  th:value="${a.name}" th:text="${a.name}"></option>
             </select>
           </div>
 
@@ -82,9 +83,8 @@
           </div>
           <div class="form-group">
             <label for="sel5">Need/Specialty:</label>
-            <select class="form-control" id="sel5" th:name="needOrSpecialty" th:field="*{needOrSpecialty}">
-              <option th:each="s :${user.specialities}"
-                      th:value="${s}" th:text="${s}"></option>
+            <select class="form-control" id="sel5" th:name="specialties" th:field="*{specialties}" multiple="multiple">
+              <option th:each="s :${specialties}" th:value="${s.id}" th:text="${s.name}"></option>
             </select>
           </div>
 

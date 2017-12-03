@@ -1,0 +1,185 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="www.thymeleaf.org">
+<head>
+    <title>Admin profile-Personal Fitness</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+    <!--[if lte IE 8]>
+    <script src="/js/html5shiv.js"></script><![endif]-->
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/skel.min.js"></script>
+    <script src="/js/skel-layers.min.js"></script>
+    <script src="/js/init.js"></script>
+    <noscript>
+        <link rel="stylesheet" href="/css/skel.css"/>
+        <link rel="stylesheet" href="/css/style.css"/>
+        <link rel="stylesheet" href="/css/style-xlarge.css"/>
+    </noscript>
+    <!-- Custom fonts for this template-->
+    <link href="/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <!-- Custom scripts for all pages-->
+    <script src="/js/sb-admin.min.js"></script>
+
+
+</head>
+<body id="top">
+
+<!-- Header 1-->
+<div th:replace="homepage::header1"></div>
+
+
+<!--</header>-->
+<header2 th:fragment="header2" id="header2" class="skel-layers-fixed">
+    <h1><a href="#">Admin</a></h1>
+    <nav class="collapse navbar-collapse" id="nav2">
+        <ul>
+            <li><a href="/admin">home</a></li>
+            <li><a href="/admin/users">Manage Users</a></li>
+            <li><a href="/admin/trainers">Manage Trainers</a></li>
+            <li><a href="/admin/areas">Manage Areas</a></li>
+            <li><a href="/admin/specialties">Manage Specialties</a></li>
+            <li><a href="/logout" class="button special">Sign Out</a></li>
+        </ul>
+    </nav>
+    </div>
+</header2>
+<!-- Main -->
+<div id="main" class="wrapper style2">
+    <header class="major2">
+        <h2 th:inline="text">Welcome Admin [[${user.username}]]</h2>
+    </header>
+    <div class="container">
+        <div class="row">
+            <div class="4u">
+                <section class="special box_white">
+                    <a href="#" class="image fit"><img th:src="${user.headshot}" alt=""/></a>
+                    <h3 th:inline="text">[[${user.firstName}]]</h3>
+                    <p th:inline="text">[[${user.email}]]</p>
+                    <!--<ul class="actions">-->
+                        <!--<li><a href="/admin/choosepic" class="button alt">Choose a picture</a></li>-->
+                    <!--</ul>-->
+                </section>
+            </div>
+            <div class="8u skel-cell-important">
+                <section class="box_white" th:if="${manageTrainers}">
+                <div class="table-wrapper">
+                    <h3 class="text-center search_h3" th:inline="text">Suspend/Unsuspend Trainer</h3>
+                    <hr/>
+
+                    <table >
+                        <tr>
+                            <th>Name</th>
+                            <th>Username</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                        <tr class="active" th:each="user : ${trainers}">
+                            <td th:inline="text">[[${user.firstName}]] [[${user.lastName}]]</td>
+                            <td th:text="${user.username}"></td>
+                            <td >
+                                <span th:if="${user.suspended}" style="color: red;">Suspended</span>
+                                <span th:unless="${user.suspended}" >Active</span>
+                            </td>
+                            <td>
+                                <a th:href="@{/admin/suspendtrainer/{id}(id=${user.id})}" th:unless="${user.suspended}">Suspend</a>
+                                <a th:href="@{/admin/unsuspendtrainer/{id}(id=${user.id})}" th:if="${user.suspended}">Unsuspend</a>
+                        </tr>
+                    </table>
+                </div>
+            </section>
+                <section class="box_white" th:if="${manageUsers}">
+                    <div class="table-wrapper">
+                        <h3 class="text-center search_h3" th:inline="text">Suspend/Unsuspend User</h3>
+                        <hr/>
+
+                        <table>
+                            <tr>
+                                <th>Name</th>
+                                <th>Username</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                            <tr class="active" th:each="user : ${users}" >
+                                <td th:inline="text">[[${user.firstName}]] [[${user.lastName}]]</td>
+                                <td th:text="${user.username}"></td>
+                                <td >
+                                    <span th:if="${user.suspended}" style="color: red;">Suspended</span>
+                                    <span th:unless="${user.suspended}" >Active</span>
+                                </td>
+                                <td>
+                                    <a th:href="@{/admin/suspenduser/{id}(id=${user.id})}" th:unless="${user.suspended}">Suspend</a>
+                                    <a th:href="@{/admin/unsuspenduser/{id}(id=${user.id})}" th:if="${user.suspended}">Unsuspend</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </section>
+                <section class="box_white" th:if="${manageAreas}">
+                <form  action="#" th:action="@{/admin/areas}" method="post">
+                    <h3 class="text-center search_h3" >Add new Area</h3>
+                    <input class="form-control" id="input1" type="text"
+                           name ="areaName" placeholder="Enter area name">
+                    <br/>
+                    <button type="submit" class="button big special" >Add area</button>
+                </form>
+                </section>
+
+                <section class="box_white" th:if="${manageAreas}">
+                    <div class="table-wrapper">
+                        <h3 class="text-center search_h3" th:inline="text">Remove Area</h3>
+                        <hr/>
+
+                        <table class="table  table-striped table-hover table-responsive">
+                            <tr>
+                                <th>Name</th>
+                                <th>Actions</th>
+                            </tr>
+                            <tr class="active" th:each="area : ${areas}">
+                                 <td th:text="${area.name}"></td>
+                                <td>
+                                    <a th:href="@{/admin/removearea/{id}(id=${area.id})}">Remove</a>
+                                </td>
+                            </tr>
+                        </table>
+
+                    </div>
+                </section>
+                <section class="box_white" th:if="${manageSpecialties}">
+                    <form  action="#" th:action="@{/admin/specialties}" method="post">
+                        <h3 class="text-center search_h3">Add new Specialty</h3>
+                        <input class="form-control" id="input2" type="text"
+                               name ="specialtyName" placeholder="Enter specialty name">
+                        <br/>
+                        <button type="submit" class="button big special" >Add specialty</button>
+                    </form>
+                </section>
+                <section class="box_white" th:if="${manageSpecialties}">
+                <div class="table-wrapper">
+                    <h3 class="text-center search_h3" th:inline="text">Remove Specialty</h3>
+                    <hr/>
+
+                    <table class="table  table-striped table-hover table-responsive">
+                        <tr>
+                            <th>Name</th>
+                            <th>Actions</th>
+                        </tr>
+                        <tr class="active" th:each="specialty : ${specialties}">
+                            <td th:text="${specialty.name}"></td>
+                            <td>
+                                <a th:href="@{/admin/removespecialty/{id}(id=${specialty.id})}">Remove</a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </section></div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<div th:replace="homepage::footer1"></div>
+
+
+</body>
+</html>

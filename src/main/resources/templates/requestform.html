@@ -142,7 +142,7 @@
                     <label for="tags">Trainer Name</label>
                     <div>
                        <input id="tags" name="textinput5" placeholder="trainer name"
-                               class="form-control input-md" type="text" th:field="*{receiverName}">
+                               class="form-control input-md" type="text" th:field="*{receiverName}" >
                         <span th:if="${#fields.hasErrors('receiverName')}"
                               th:errors="*{receiverName}">Trainer name error</span>
 

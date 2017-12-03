@@ -31,11 +31,11 @@
     <h1><a href="#">Trainer</a></h1>
     <nav id="nav2">
         <ul>
-            <li><a href="/user" th:if="${user.trainerRequestFlag}"><i class="icon2 fa-bell major4"></i> New Request</a></li>
-            <li><a href="/trainer">Profile</a></li>
-            <li><a href="/trainer/request">View Request</a></li>
+            <li><a href="/user" th:if="${user.trainerRequestFlag}"><i class="icon2 fa-bell major4"></i> New Request</a>
+            </li>
+            <li><a href="/trainer">Home</a></li>
             <li><a href="/trainer/comment">Rate a User</a></li>
-            <!--<li><a href="/trainer">Search Users</a></li>-->
+            <li><a href="/trainer/search">Search Users</a></li>
             <li><a href="/logout" class="button special">Sign Out</a></li>
         </ul>
     </nav>
@@ -43,7 +43,7 @@
 </header2>
 <!-- Main -->
 <section id="main" class="wrapper style2">
-    <header class="major">
+    <header class="major2">
         <h2 th:inline="text">Welcome trainer [[${user.username}]]</h2>
     </header>
     <div class="container">
@@ -53,45 +53,49 @@
                     <a href="#" class="image fit"><img th:src="${user.headshot}" alt=""/></a>
                     <h3 th:inline="text">[[${user.firstName}]]</h3>
                     <p th:inline="text">[[${user.email}]]</p>
-                    <div  th:inline="text"> [[${user.needOrSpecialty}]]</div><hr class="hr2"/>
-                    <div  th:inline="text"> [[${user.needOrSpecialty}]]</div><hr class="hr2"/>
-                    <div  th:inline="text"> [[${user.needOrSpecialty}]]</div>
+                    <div th:each="s:${user.specialties}">
+                        <div th:inline="text"> [[${s.name}]]</div>
+                        <hr class="hr2"/>
+                    </div>
 
                     <ul class="actions">
-                        <li><a href="/user/choosepic" class="button alt">Choose a picture</a></li>
+                        <li><a href="/trainer/choosepic" class="button alt">Choose a picture</a></li>
                     </ul>
-
-
-                </section>
+               </section>
                 <section class="box_white">
-                    <h3 class="special">Rating Average</h3>
-                    <div class="row">
+                    <h3 class="special align-center">Rating Average</h3>
+                    <div class="align-center">
 
-                        <div class="8u" th:if="${user.averageRating == 0}">
-                            <label th:inline="text"><i class ="fa fa-star-o"></i><i class ="fa fa-star-o"></i>
-                                <i class ="fa fa-star-o"></i><i class ="fa fa-star-o"></i><i class ="fa fa-star-o"></i></label>
+                        <div th:if="${user.averageRating == 0}">
+                            <label><i class="fa fa-star-o"></i><i class="fa fa-star-o">
+                            </i><i class="fa fa-star-o"></i><i class="fa fa-star-o">
+                            </i><i class="fa fa-star-o"></i></label>
                         </div>
-                        <div class="8u" th:if="${user.averageRating == 1}">
-                            <label th:inline="text"><i class ="fa fa-star" style="color:yellow;"></i></label>
+                        <div  th:if="${user.averageRating == 1}">
+                            <label ><i class="fa fa-star" style="color:yellow;"></i></label>
                         </div>
-                        <div class="8u" th:if="${user.averageRating == 2}">
-                            <label th:inline="text"><i class ="fa fa-star"style="color:yellow;"></i>
-                                <i class ="fa fa-star"style="color:yellow;"></i></label>
+                        <div th:if="${user.averageRating == 2}">
+                            <label><i class="fa fa-star" style="color:yellow;"></i>
+                                <i class="fa fa-star" style="color:yellow;"></i></label>
                         </div>
-                        <div class="8u" th:if="${user.averageRating == 3}">
-                            <label th:inline="text"><i class ="fa fa-star" style="color:yellow;"></i><i class ="fa fa-star" style="color:yellow;">
-
-                            </i><i class ="fa fa-star" style="color:yellow;"></i></label>
+                        <div th:if="${user.averageRating == 3}">
+                            <label ><i class="fa fa-star" style="color:yellow;"></i><i
+                                    class="fa fa-star" style="color:yellow;">
+                            </i><i class="fa fa-star" style="color:yellow;"></i></label>
                         </div>
-                        <div class="8u" th:if="${user.averageRating == 4}">
-                            <label th:inline="text"><i class ="fa fa-star" style="color:yellow;"></i><i class ="fa fa-star" style="color:yellow;"></i>
-                                <i class ="fa fa-star" style="color:yellow;"></i><i class ="fa fa-star" style="color:yellow;"></i></label>
+                        <div  th:if="${user.averageRating == 4}">
+                            <label><i class="fa fa-star" style="color:yellow;"></i><i
+                                    class="fa fa-star" style="color:yellow;"></i>
+                                <i class="fa fa-star" style="color:yellow;"></i><i class="fa fa-star"
+                                                                                   style="color:yellow;"></i></label>
                         </div>
-                        <div class="8u" th:if="${user.averageRating == 5}">
-                            <label th:inline="text"><i class ="fa fa-star" style="color:yellow;"></i><i class ="fa fa-star" style="color:yellow;">
-
-                            </i><i class ="fa fa-star" style="color:yellow;"></i><i class ="fa fa-star" style="color:yellow;"></i>
-                                <i class ="fa fa-star" style="color:yellow;"></i></label>
+                        <div th:if="${user.averageRating == 5}">
+                            <label><i class="fa fa-star" style="color:yellow;"></i><i
+                                    class="fa fa-star"
+                                    style="color:yellow;">
+                            </i><i class="fa fa-star" style="color:yellow;"></i><i class="fa fa-star"
+                                                                                   style="color:yellow;"></i>
+                                <i class="fa fa-star" style="color:yellow;"></i></label>
                         </div>
 
                     </div>
@@ -103,26 +107,34 @@
                         <div class="row">
                             <label class="4u right">Rating: </label>
                             <div class="8u" th:if="${comment.rating == 1}">
-                                <label th:inline="text"><i class ="fa fa-star" style="color:yellow;"></i></label>
+                                <label th:inline="text"><i class="fa fa-star" style="color:yellow;"></i></label>
                             </div>
                             <div class="8u" th:if="${comment.rating == 2}">
-                                <label th:inline="text"><i class ="fa fa-star"style="color:yellow;"></i>
-                                    <i class ="fa fa-star"style="color:yellow;"></i></label>
+                                <label th:inline="text"><i class="fa fa-star" style="color:yellow;"></i>
+                                    <i class="fa fa-star" style="color:yellow;"></i></label>
                             </div>
                             <div class="8u" th:if="${comment.rating == 3}">
-                                <label th:inline="text"><i class ="fa fa-star" style="color:yellow;"></i><i class ="fa fa-star" style="color:yellow;">
+                                <label th:inline="text"><i class="fa fa-star" style="color:yellow;"></i><i
+                                        class="fa fa-star"
+                                        style="color:yellow;">
 
-                                </i><i class ="fa fa-star" style="color:yellow;"></i></label>
+                                </i><i class="fa fa-star" style="color:yellow;"></i></label>
                             </div>
                             <div class="8u" th:if="${comment.rating == 4}">
-                                <label th:inline="text"><i class ="fa fa-star" style="color:yellow;"></i><i class ="fa fa-star" style="color:yellow;"></i>
-                                    <i class ="fa fa-star" style="color:yellow;"></i><i class ="fa fa-star" style="color:yellow;"></i></label>
+                                <label th:inline="text"><i class="fa fa-star" style="color:yellow;"></i><i
+                                        class="fa fa-star"
+                                        style="color:yellow;"></i>
+                                    <i class="fa fa-star" style="color:yellow;"></i><i class="fa fa-star"
+                                                                                       style="color:yellow;"></i></label>
                             </div>
                             <div class="8u" th:if="${comment.rating == 5}">
-                                <label th:inline="text"><i class ="fa fa-star" style="color:yellow;"></i><i class ="fa fa-star" style="color:yellow;">
+                                <label th:inline="text"><i class="fa fa-star" style="color:yellow;"></i><i
+                                        class="fa fa-star"
+                                        style="color:yellow;">
 
-                                </i><i class ="fa fa-star" style="color:yellow;"></i><i class ="fa fa-star" style="color:yellow;"></i>
-                                    <i class ="fa fa-star" style="color:yellow;"></i></label>
+                                </i><i class="fa fa-star" style="color:yellow;"></i><i class="fa fa-star"
+                                                                                       style="color:yellow;"></i>
+                                    <i class="fa fa-star" style="color:yellow;"></i></label>
                             </div>
 
                         </div>
@@ -155,50 +167,53 @@
                     <h2><i class="icon2 fa-sticky-note major2"></i>Requests</h2>
                     <hr/>
 
-                    <div >
+                    <div>
                         <h3>No requests received</h3>
                     </div>
                 </section>
-                    <section class="box_white" th:each="request :${user.requests}">
-                        <div th:if="${request.receiverAnswer == 'Waiting'}">
-                            <h2><i class="icon2 fa-sticky-note major2"></i>Request</h2>
-                        </div>
-                        <div th:if="${request.receiverAnswer == 'Accepted'}">
-                            <h2><i class="icon2 fa-sticky-note major_green"></i>Request Accepted</h2>
-                        </div>
-                        <hr/>
-                         <div class="row">
+                <section class="box_white" th:each="request :${user.requests}">
+                    <div th:if="${request.receiverAnswer == 'Waiting'}">
+                        <h2><i class="icon2 fa-sticky-note major2"></i>Request</h2>
+                    </div>
+                    <div th:if="${request.receiverAnswer == 'Accepted'}">
+                        <h2><i class="icon2 fa-sticky-note major_green"></i>Request Accepted</h2>
+                    </div>
+                    <hr/>
+                    <div class="row">
 
-                            <label class="4u right"> User Name: </label>
-                            <div class="8u">
-                                <label th:inline="text">[[${request.senderName}]]</label>
-                            </div>
+                        <label class="4u right"> User Name: </label>
+                        <div class="8u">
+                            <label th:inline="text">[[${request.senderName}]]</label>
                         </div>
-                        <div class="row">
-                            <label class="4u right">Date: </label>
-                            <div class="8u">
-                                <label th:inline="text">[[${request.date}]]</label>
-                            </div>
+                    </div>
+                    <div class="row">
+                        <label class="4u right">Date: </label>
+                        <div class="8u">
+                            <label th:inline="text">[[${request.date}]]</label>
                         </div>
-                        <div class="row">
-                            <label class="4u right">Time: </label>
-                            <div class="8u">
-                                <label th:inline="text">[[${request.time}]]</label>
-                            </div>
+                    </div>
+                    <div class="row">
+                        <label class="4u right">Time: </label>
+                        <div class="8u">
+                            <label th:inline="text">[[${request.time}]]</label>
                         </div>
-                        <div class="row">
-                            <label class="4u right">Area: </label>
-                            <div class="8u">
-                                <label th:inline="text">[[${request.area}]]</label>
-                            </div>
+                    </div>
+                    <div class="row">
+                        <label class="4u right">Area: </label>
+                        <div class="8u">
+                            <label th:inline="text">[[${request.area}]]</label>
                         </div>
-                        <div class="row">
-                            <label class="4u right"></label>
-                            <div class="8u">
-                                <label th:if="${request.answered}" th:inline="text">[[${request.receiverAnswer}]]</label>
-                                <label th:unless="${request.answered}">   <a th:href="@{/trainer/requests/{id}(id=${request.id})}"> <button type="submit" class="btn btn-primary btn-block">Answer Request</button></a></label>
-                            </div>
+                    </div>
+                    <div class="row">
+                        <label class="4u right"></label>
+                        <div class="8u">
+                            <label th:if="${request.answered}" th:inline="text">[[${request.receiverAnswer}]]</label>
+                            <label th:unless="${request.answered}"> <a
+                                    th:href="@{/trainer/requests/{id}(id=${request.id})}">
+                                <button type="submit" class="btn btn-primary btn-block">Answer Request</button>
+                            </a></label>
                         </div>
+                    </div>
 
                 </section>
 

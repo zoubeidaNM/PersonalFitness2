@@ -8,14 +8,12 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Controller
 public class HomeController {
@@ -31,10 +29,10 @@ public class HomeController {
 
 
     @Autowired
-    NameRepository areas;
+    AreaRepository areas;
 
     @Autowired
-    NameRepository specialties;
+    SpecialtyRepository specialties;
 
 
     @Autowired
@@ -88,6 +86,8 @@ public class HomeController {
 
     @RequestMapping(value="/register", method = RequestMethod.GET)
     public String showRegistrationPage(Model model){
+        model.addAttribute("areas", areas.findAll());
+        model.addAttribute("specialties", specialties.findAll());
         model.addAttribute("user", new FitnessUser());
         return "registeruser";
     }
@@ -96,7 +96,8 @@ public class HomeController {
     public String processRegistrationPage(@Valid @ModelAttribute("user") FitnessUser user,
                                           BindingResult result, @RequestParam String role, Model model) {
         if (result.hasErrors()) {
-            return "registeruser";
+            System.out.println(result.toString());
+            return "redirect:/register";
         } else {
 
             if (userRepository.findByUsername(user.getUsername()) == null) {
@@ -110,13 +111,12 @@ public class HomeController {
                 model.addAttribute("error", true);
                 model.addAttribute("error_message", "Username already exists. Try again!");
 
-                return "registeruser";
+                return "redirect:/register";
             }
             model.addAttribute("user", user);
 
             System.out.println(user.getFirstName());
-            System.out.println(user.getArea());
-            System.out.println(user.getNeedOrSpecialty());
+            System.out.printf(""+user.getSpecialties().size());
 
             return "login";
         }
@@ -134,24 +134,8 @@ public class HomeController {
         request.setHours(14);
         request.setMinutes(30);
 
-
-        // get the names of the trainers for the autocomlete
-        ArrayList<String> trainerNames = new ArrayList<String>();
-
-        Iterable<FitnessUser> users =  userRepository.findAll();
-        for(FitnessUser user:users){
-            for(UserRole role: (user.getRoles())){
-            if (role.getRole().equalsIgnoreCase("TRAINER")){
-                trainerNames.add(user.getUsername());
-                System.out.println(user.getUsername());
-            }
-            }
-        }
-
-        String names[] = new String[trainerNames.size()];
-         names = trainerNames.toArray(names);
-
-        model.addAttribute("names", names);
+       String names[] = get_trainerNames();
+       model.addAttribute("names", names);
 
         //get the areas
         model.addAttribute("areas", areas.findAll());
@@ -166,7 +150,7 @@ public class HomeController {
         FitnessUser user = userRepository.findByUsername(principal.getName());
         if (result.hasErrors()) {
             System.out.println(result.toString());
-            return "requestform";
+            return "redirect:/user/request";
         } else {
 
             request.processDate();
@@ -193,6 +177,33 @@ public class HomeController {
         }
     }
 
+    @RequestMapping("/user/request/{id}")
+    public String sendRequest(@PathVariable("id") long id, RedirectAttributes redirectAttributes, Model model){
+
+
+        FitnessUser trainer = userRepository.findOne(id);
+
+        Request request = new Request();
+
+        request.setReceiverName(trainer.getUsername());
+
+        //set default dates
+        request.setDay(1);
+        request.setYear(2017);
+        request.setHours(14);
+        request.setMinutes(30);
+
+        String names[] = get_trainerNames();
+        model.addAttribute("names", names);
+
+        //get the areas
+        model.addAttribute("areas", areas.findAll());
+
+        model.addAttribute("request", request);
+        return "requestform";
+    }
+
+
     @RequestMapping("/trainer/requests/{id}")
     public String showTrainerRequest(@PathVariable("id") long id, Model model){
         model.addAttribute("request", requestRepository.findOne(id));
@@ -215,6 +226,7 @@ public class HomeController {
             request.setStatus("Accepted");
             trainerUser.addRatableUserName(user.getUsername());
             user.addRatableUserName(trainerUser.getUsername());
+            user.setUserRequestFlag(true);
 
         } else if (acceptOrDecline.equalsIgnoreCase("decline")) {
             // user clicked "decline"
@@ -223,10 +235,10 @@ public class HomeController {
             request.setReceiverAnswer("Declined");
             request.setShowTrainer(false);
             trainerUser.discardDeniedRequest(request);
+             user.setUserRequestFlag(true);
         }
 
         requestRepository.save(request);
-        user.setUserRequestFlag(true);
         trainerUser.setTrainerRequestFlag(false);
         model.addAttribute("user", trainerUser);
 
@@ -337,10 +349,6 @@ public class HomeController {
 
             String transformedImage = cloudc.createUrl(uploadedName);
 
-            System.out.println(transformedImage);
-            System.out.println("Uploaded:" + uploadURL);
-            System.out.println("Name:" + uploadedName);
-
             user.setHeadshot(transformedImage);
             userRepository.save(user);
             model.addAttribute("user", user);
@@ -375,10 +383,6 @@ public class HomeController {
 
             String transformedImage = cloudc.createUrl(uploadedName);
 
-            System.out.println(transformedImage);
-            System.out.println("Uploaded:" + uploadURL);
-            System.out.println("Name:" + uploadedName);
-
             user.setHeadshot(transformedImage);
             userRepository.save(user);
             model.addAttribute("user", user);
@@ -388,32 +392,292 @@ public class HomeController {
             return "redirect:/trainer/choosepic";
         }
 
-        return "trainer";
+        return "redirect:/trainer";
     }
 
 
     @RequestMapping("/user/search")
     public String trainerSearch(Principal principal, Model model) {
+
+        ArrayList<FitnessUser> searchedUsers = getUsersList("TRAINER");
+        FitnessUser user = userRepository.findByUsername(principal.getName());
+
+        model.addAttribute("searchedUsers", searchedUsers);
+        model.addAttribute("user", user);
+
+        return "searchresult";
+    }
+
+    @PostMapping("/user/search")
+    public String searchRepository(Principal principal, @RequestParam String searchField,
+                                   @RequestParam String searchStr, Model model) {
         ArrayList<FitnessUser> trainers = new ArrayList<FitnessUser>();
+        FitnessUser user = userRepository.findByUsername(principal.getName());
+        System.out.println("field " + searchField + " name"+ searchStr+"*");
+
+        if (searchField.equalsIgnoreCase("name")) {
+            Iterable<FitnessUser> users = userRepository.findAllByUsernameContaining(searchStr);
+            trainers = getUsersList("TRAINER", users);
+            model.addAttribute("field", "name");
+            model.addAttribute("searchstr", searchStr);
+            model.addAttribute("searchedUsers", trainers);
+            model.addAttribute("user", user);
+        } else if (searchField.equalsIgnoreCase("gender")) {
+            Iterable<FitnessUser> users = userRepository.findAllByGenderContaining(searchStr);
+            trainers = getUsersList("TRAINER", users);
+            model.addAttribute("field", "gender");
+            model.addAttribute("searchstr", searchStr);
+            model.addAttribute("searchedUsers", trainers);
+            model.addAttribute("user", user);
+    } else if (searchField.equalsIgnoreCase("rating")) {
+            try {
+                int rating = Integer.parseInt(searchStr);
+                Iterable<FitnessUser> users = userRepository.findAllByAverageRatingContaining(rating);
+                trainers = getUsersList("TRAINER", users);
+                model.addAttribute("field", "rating");
+                model.addAttribute("searchstr", searchStr);
+                model.addAttribute("searchedUsers", trainers);
+                model.addAttribute("user", user);
+            }catch (Exception e){
+                model.addAttribute("user", user);
+                System.out.println("Rating have to be an int");
+            }
+    }
+       return "searchresult";
+
+    }
+
+    @RequestMapping("/trainer/search")
+    public String userSearch(Principal principal, Model model) {
+
+        ArrayList<FitnessUser> searchedUsers = getUsersList("USER");
+        FitnessUser user = userRepository.findByUsername(principal.getName());
+
+        model.addAttribute("searchedUsers", searchedUsers);
+        model.addAttribute("user", user);
+
+        return "searchresult";
+    }
+
+    @RequestMapping("/admin")
+    public String admin(Principal principal, Model model){
+
+        FitnessUser user = userRepository.findByUsername(principal.getName());
+
+        ArrayList<FitnessUser> users = getUsersList("USER");
+        ArrayList<FitnessUser> trainers = getUsersList("TRAINER");
+
+        model.addAttribute("user", user);
+        model.addAttribute("manageUsers",false);
+        model.addAttribute("manageTrainers",false);
+        model.addAttribute("manageAreas",false);
+        model.addAttribute("manageSpecialties",false);
+        model.addAttribute("users", userRepository.findAll());
+        model.addAttribute("trainers", userRepository.findAll());
+        model.addAttribute("areas", areas.findAll());
+        model.addAttribute("specialties", specialties.findAll());
+        return "admin";
+    }
+    @RequestMapping("/admin/users")
+    public String namageUsers(Principal principal, Model model) {
+        FitnessUser user = userRepository.findByUsername(principal.getName());
+
+        ArrayList<FitnessUser> users = getUsersList("USER");
+        ArrayList<FitnessUser> trainers = getUsersList("TRAINER");
+
+        model.addAttribute("user", user);
+        model.addAttribute("manageUsers", true);
+        model.addAttribute("manageTrainers", false);
+        model.addAttribute("manageAreas", false);
+        model.addAttribute("manageSpecialties", false);
+        model.addAttribute("users", users);
+        model.addAttribute("trainers", trainers);
+        model.addAttribute("areas", areas.findAll());
+        model.addAttribute("specialties", specialties.findAll());
+        return "admin";
+    }
+
+    @RequestMapping("/admin/trainers")
+    public String namageTrainers(Principal principal, Model model) {
+        FitnessUser user = userRepository.findByUsername(principal.getName());
+
+        ArrayList<FitnessUser> users = getUsersList("USER");
+        ArrayList<FitnessUser> trainers = getUsersList("TRAINER");
+
+        model.addAttribute("user", user);
+        model.addAttribute("manageUsers", false);
+        model.addAttribute("manageTrainers", true);
+        model.addAttribute("manageAreas", false);
+        model.addAttribute("manageSpecialties", false);
+        model.addAttribute("users",users);
+        model.addAttribute("trainers", trainers);
+        model.addAttribute("areas", areas.findAll());
+        model.addAttribute("specialties", specialties.findAll());
+        return "admin";
+    }
+
+        @RequestMapping("/admin/areas")
+        public String namageAreas(Principal principal, Model model){
+            FitnessUser user = userRepository.findByUsername(principal.getName());
+
+            ArrayList<FitnessUser> users = getUsersList("USER");
+            ArrayList<FitnessUser> trainers = getUsersList("TRAINER");
+
+            model.addAttribute("user", user);
+            model.addAttribute("manageUsers",false);
+            model.addAttribute("manageTrainers",false);
+            model.addAttribute("manageAreas",true);
+            model.addAttribute("manageSpecialties",false);
+            model.addAttribute("users", users);
+            model.addAttribute("trainers", trainers);
+            model.addAttribute("areas", areas.findAll());
+            model.addAttribute("specialties", specialties.findAll());
+            return "admin";
+
+        }
+
+        @RequestMapping("/admin/specialties")
+        public String namageSpecialties(Principal principal, Model model){
+            FitnessUser user = userRepository.findByUsername(principal.getName());
+
+            ArrayList<FitnessUser> users = getUsersList("USER");
+            ArrayList<FitnessUser> trainers = getUsersList("TRAINER");
+
+            model.addAttribute("user", user);
+            model.addAttribute("manageUsers",false);
+            model.addAttribute("manageTrainers",false);
+            model.addAttribute("manageAreas",false);
+            model.addAttribute("manageSpecialties",true);
+            model.addAttribute("users", users);
+            model.addAttribute("trainers", trainers);
+            model.addAttribute("areas", areas.findAll());
+            model.addAttribute("specialties", specialties.findAll());
+            return "admin";
+
+        }
+
+    @RequestMapping("/admin/suspenduser/{id}")
+    public String suspendUser(@PathVariable("id") long id, Model model){
+        FitnessUser user = userRepository.findOne(id);
+        user.setSuspended(true);
+        userRepository.save(user);
+        return "redirect:/admin/users";
+    }
+
+    @RequestMapping("/admin/unsuspenduser/{id}")
+    public String unsuspendUser(@PathVariable("id") long id, Model model){
+        FitnessUser user = userRepository.findOne(id);
+        user.setSuspended(false);
+        userRepository.save(user);
+        return "redirect:/admin/users";
+    }
+
+    @RequestMapping("/admin/suspendtrainer/{id}")
+    public String suspendTrainer(@PathVariable("id") long id, Model model){
+        FitnessUser user = userRepository.findOne(id);
+        user.setSuspended(true);
+        userRepository.save(user);
+        return "redirect:/admin/trainers";
+    }
+
+    @RequestMapping("/admin/unsuspendtrainer/{id}")
+    public String unsuspendTrainer(@PathVariable("id") long id, Model model){
+        FitnessUser user = userRepository.findOne(id);
+        user.setSuspended(false);
+        userRepository.save(user);
+        return "redirect:/admin/trainers";
+    }
+
+    @RequestMapping("/admin/removearea/{id}")
+    public String removeArea(@PathVariable("id") long id, Model model){
+        Area area = areas.findOne(id);
+        areas.delete(area);
+        return "redirect:/admin/areas";
+    }
+
+    @RequestMapping("/admin/removespecialty/{id}")
+    public String removeSpecialty(@PathVariable("id") long id, Model model){
+        Specialty specialty = specialties.findOne(id);
+        specialties.delete(specialty);
+        return "redirect:/admin/specialties";
+    }
+
+
+    @PostMapping("/admin/areas")
+    public String addArea(@RequestParam String areaName, Model model){
+        if(!areaName.isEmpty())
+        {
+            Area area = new Area(areaName);
+            areas.save(area);
+        }
+        return "redirect:/admin/areas";
+    }
+
+    @PostMapping("/admin/specialties")
+    public String addSpecialty(@RequestParam String specialtyName, Model model){
+        if(!specialtyName.isEmpty())
+        {
+            Specialty specialty = new Specialty(specialtyName);
+            specialties.save(specialty);
+        }
+        return "redirect:/admin/specialties";
+    }
+
+    public ArrayList<FitnessUser> getUsersList(String roleName){
+
+        ArrayList<FitnessUser> searchedUsers = new ArrayList<FitnessUser>();
 
         Iterable<FitnessUser> users =  userRepository.findAll();
 
         for(FitnessUser user:users){
             for(UserRole role: (user.getRoles())){
+                if (role.getRole().equalsIgnoreCase(roleName)){
+                    searchedUsers.add(user);
+                    System.out.println(user.getUsername()+"  " + user.isSuspended());
+                }
+            }
+        }
+        return searchedUsers;
+
+    }
+
+    public ArrayList<FitnessUser> getUsersList(String roleName, Iterable<FitnessUser> users){
+
+        ArrayList<FitnessUser> searchedUsers = new ArrayList<FitnessUser>();
+
+        for(FitnessUser user:users){
+            for(UserRole role: (user.getRoles())){
+                if (role.getRole().equalsIgnoreCase(roleName)){
+                    searchedUsers.add(user);
+                    System.out.println(user.getUsername()+"  " + user.isSuspended());
+                }
+            }
+        }
+        return searchedUsers;
+
+    }
+
+    public String[] get_trainerNames(){
+        // get the names of the trainers for the autocomlete
+        ArrayList<String> trainerNames = new ArrayList<String>();
+
+        Iterable<FitnessUser> users =  userRepository.findAll();
+        for(FitnessUser user:users){
+            for(UserRole role: (user.getRoles())){
                 if (role.getRole().equalsIgnoreCase("TRAINER")){
-                    trainers.add(user);
+                    trainerNames.add(user.getUsername());
                     System.out.println(user.getUsername());
                 }
             }
         }
-        FitnessUser user = userRepository.findByUsername(principal.getName());
 
-        System.out.println(trainers.size());
-        model.addAttribute("trainers", trainers);
-        model.addAttribute("user", user);
+        String names[] = new String[trainerNames.size()];
+        names = trainerNames.toArray(names);
 
-        return "searchresult";
+        return names;
+
     }
+
 
 
 }

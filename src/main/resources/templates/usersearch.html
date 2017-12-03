@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org"
+      xmlns:sec="www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>User Search Results- Personal Fitness</title>
+    <!-- Custom fonts for this template-->
+    <link href="/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"/>
+    <!-- Custom styles for this template-->
+    <link href="/css/sb-admin.css" rel="stylesheet">
+    <!--[if lte IE 8]>
+    <script src="/js/html5shiv.js"></script><![endif]-->
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/skel.min.js"></script>
+    <script src="/js/skel-layers.min.js"></script>
+    <script src="/js/init.js"></script>
+    <noscript>
+        <link rel="stylesheet" href="/css/skel.css"/>
+        <link rel="stylesheet" href="/css/style.css"/>
+        <link rel="stylesheet" href="/css/style-xlarge.css"/>
+    </noscript>
+</head>
+
+<body class="body_bg2">
+
+<!-- Headers-->
+<div th:replace="homepage::header1"></div>
+<div sec:authorize="hasAuthority('USER')">
+    <div th:replace="user::header2"></div>
+</div>
+<!--<div sec:authorize="hasAuthority('RECRUITER')">-->
+<!--<div th:replace="recruiterprofile::header2"></div>-->
+<!--</div>-->
+<div class="container">
+    <h3></h3>
+    <h3></h3>
+    <hr/>
+    <h3 class="text-center" th:inline="text">List of all Trainers</h3>
+    <hr/>
+    <table class="table  table-bordered table-hover table-responsive">
+        <tr>
+            <th>Trainer Name</th>
+            <th>Specialty</th>
+            <th>Level</th>
+            <th>Rating</th>
+            <td>Actions</td>
+        </tr>
+        <tr th:each="user : ${trainers}">
+            <td th:text="${user.username}"></td>
+            <td><span th:each="s :${user.specialties}"><a th:text="${s.name}"> - </a></span></td>
+            <td th:text="${user.fitnessLevel}"></td>
+            <td>   <div class="row">
+
+                <div class="8u" th:if="${user.averageRating == 0}">
+                    <label th:inline="text"><i class ="fa fa-star-o"></i><i class ="fa fa-star-o"></i>
+                        <i class ="fa fa-star-o"></i><i class ="fa fa-star-o"></i><i class ="fa fa-star-o"></i></label>
+                </div>
+                <div class="8u" th:if="${user.averageRating == 1}">
+                    <label th:inline="text"><i class ="fa fa-star" style="color:yellow;"></i></label>
+                </div>
+                <div class="8u" th:if="${user.averageRating == 2}">
+                    <label th:inline="text"><i class ="fa fa-star"style="color:yellow;"></i>
+                        <i class ="fa fa-star"style="color:yellow;"></i></label>
+                </div>
+                <div class="8u" th:if="${user.averageRating == 3}">
+                    <label th:inline="text"><i class ="fa fa-star" style="color:yellow;"></i><i class ="fa fa-star" style="color:yellow;">
+
+                    </i><i class ="fa fa-star" style="color:yellow;"></i></label>
+                </div>
+                <div class="8u" th:if="${user.averageRating == 4}">
+                    <label th:inline="text"><i class ="fa fa-star" style="color:yellow;"></i><i class ="fa fa-star" style="color:yellow;"></i>
+                        <i class ="fa fa-star" style="color:yellow;"></i><i class ="fa fa-star" style="color:yellow;"></i></label>
+                </div>
+                <div class="8u" th:if="${user.averageRating == 5}">
+                    <label th:inline="text"><i class ="fa fa-star" style="color:yellow;"></i><i class ="fa fa-star" style="color:yellow;">
+
+                    </i><i class ="fa fa-star" style="color:yellow;"></i><i class ="fa fa-star" style="color:yellow;"></i>
+                        <i class ="fa fa-star" style="color:yellow;"></i></label>
+                </div>
+
+            </div></td>
+            <td>
+                <a sec:authorize="hasAuthority('USER')"
+                   th:href="@{/user/details/{id}(id=${user.id})}">Send Request</a>
+                <a sec:authorize="hasAuthority('TRAINER')"
+                   th:href="@{/recruiter/details/{id}(id=${user.id})}">details</a>
+
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+</body>
+<!-- Bootstrap core JavaScript-->
+<script
+        src="http://code.jquery.com/jquery-3.2.1.js"
+        integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script><!-- Core plugin JavaScript-->
+</body>
+
+</html>

@@ -24,10 +24,10 @@ class DataLoader implements CommandLineRunner {
     RequestRepository requestRepository;
 
     @Autowired
-    NameRepository areas;
+    AreaRepository areas;
 
     @Autowired
-    NameRepository specialties;
+    SpecialtyRepository specialties;
 
 
 
@@ -43,31 +43,30 @@ class DataLoader implements CommandLineRunner {
         UserRole trainerRole = roleRepository.findByRole("TRAINER");
         UserRole adminRole = roleRepository.findByRole("ADMIN");
 
-        Name name1= new Name("Montgomery County");
-        Name name2= new Name("Frederick County");
-        Name name3= new Name("Prince George's County");
-        Name name4= new Name("All");
+        Area area = new Area("All");
+        areas.save(area);
+        area = new Area("Montgomery County");
+        areas.save(area);
+        area = new Area("Frederick County");
+        areas.save(area);
+        area = new Area("Prince George's County");
+        areas.save(area);
 
-        areas.save(name1);
-        areas.save(name2);
-        areas.save(name3);
-        areas.save(name4);
 
-        name1=new Name("Weight Training");
-        name2=new Name("Martial Arts ");
-        name3=new Name("Water Sports");
-        name4=new Name("Aerobics");
-        Name name5=new Name("Dance");
-
-//        specialties.save(name1);
-//        specialties.save(name2);
-//        specialties.save(name3);
-//        specialties.save(name4);
-//        specialties.save(name5);
+        Specialty specialty = new Specialty("Weight Training");
+        specialties.save(specialty);
+        specialty = new Specialty("Martial Arts ");
+        specialties.save(specialty);
+        specialty = new Specialty("Water Sports");
+        specialties.save(specialty);
+        specialty = new Specialty("Aerobics");
+        specialties.save(specialty);
+        specialty = new Specialty("Dance");
+        specialties.save(specialty);
 
 
         FitnessUser user = new FitnessUser();
-        //"bob@bob.com", true, "bobberson", "Bob", "bob", "bob"
+
         user.setFirstName("Bob");
         user.setLastName("Bobberson");
         user.setEmail("bob@bob.com");
@@ -79,7 +78,6 @@ class DataLoader implements CommandLineRunner {
         user.setFitnessLevel("Intermediate");
         user.setArea("Frederick County");
         user.setGender("Male");
-        user.setNeedOrSpecialty("Dance");
         DateTimeFormatter dTF = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         DateTimeFormatter hr24 = DateTimeFormatter.ofPattern("kk:m");
 
@@ -98,7 +96,6 @@ class DataLoader implements CommandLineRunner {
         user.setFitnessLevel("Beginner");
         user.setArea("Frederick County");
         user.setGender("Male");
-        user.setNeedOrSpecialty("Weight Training");
 
 
         userRepository.save(user);
@@ -119,7 +116,9 @@ class DataLoader implements CommandLineRunner {
         user.setFitnessLevel("Advanced");
         user.setArea("All");
         user.setGender("Male");
-        user.setNeedOrSpecialty("Martial Arts");
+
+        user.getSpecialties().add(specialties.findByName("Dance"));
+        user.getSpecialties().add(specialties.findByName("Aerobics"));
 
         userRepository.save(user);
 
@@ -141,7 +140,6 @@ class DataLoader implements CommandLineRunner {
         user.setFitnessLevel("Advanced");
         user.setArea("All");
         user.setGender("Male");
-        user.setNeedOrSpecialty("Martial Arts");
         userRepository.save(user);
 
         user = new FitnessUser();
@@ -157,7 +155,6 @@ class DataLoader implements CommandLineRunner {
         user.setFitnessLevel("Beginner");
         user.setArea("All");
         user.setGender("Male");
-        user.setNeedOrSpecialty("Aerobics");
         userRepository.save(user);
 
         user = new FitnessUser();
@@ -167,18 +164,17 @@ class DataLoader implements CommandLineRunner {
         user.setEmail("michelle@personalfit.com");
         user.setContactNumber("301-444-7777");
         user.setEnabled(true);
-        user.setUsername("MichelleO");
+        user.setUsername("michelleO");
         user.setPassword("pass");
-        user.setRoles(Arrays.asList(trainerRole));
+        user.setRoles(Arrays.asList(trainerRole, adminRole));
         user.setFitnessLevel("Intermediate");
         user.setArea("All");
         user.setGender("Female");
-        user.setNeedOrSpecialty("Aerobics");
         userRepository.save(user);
 
         user = new FitnessUser();
 
-        user.setFirstName("Danielle");
+        user.setFirstName("danielle");
         user.setLastName("guthrie");
         user.setEmail("danielle@personalfit.com");
         user.setContactNumber("301-444-3366");
@@ -189,7 +185,6 @@ class DataLoader implements CommandLineRunner {
         user.setFitnessLevel("Beginner");
         user.setArea("All");
         user.setGender("Female");
-        user.setNeedOrSpecialty("Dance");
         userRepository.save(user);
 
         user = new FitnessUser();
@@ -205,7 +200,6 @@ class DataLoader implements CommandLineRunner {
         user.setFitnessLevel("Beginner");
         user.setArea("All");
         user.setGender("Male");
-        user.setNeedOrSpecialty("Water Sports");
         userRepository.save(user);
 
 
