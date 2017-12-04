@@ -22,7 +22,7 @@
 <body class="body_bg2">
 <div class="container">
     <div class="card card-register mx-auto mt-5 border_solid">
-        <div class="card-header">User Comment</div>
+        <div class="card-header"> Comment</div>
         <div class="card-body">
 <!-- USER SECTION-->
             <div sec:authorize="hasAuthority('USER')">
@@ -30,25 +30,22 @@
                 <div th:if="${error}" class="has-error text-danger" th:text="${error_message}"></div>
                 <input type="hidden" th:field="*{id}"/>
 
-
                 <div class="form-group">
                     <label for="sel3">Trainer Name</label>
                     <div>
                         <select class="form-control" id="sel3" th:name="trainerName" th:field="*{trainerName}">
                             <option th:each="t :${user.ratableUserNames}" th:value="${t}" th:text="${t}"></option>
                         </select>
+                        <span th:if="${#fields.hasErrors('trainerName')}"
+                              th:errors="*{trainerName}">Trainer name error</span>
 
                      </div>
                 </div>
 
-
-
-
-
                 <div class="form-group"><label>Rating </label>
 
                     <div >
-                        <fieldset class="rating" name="rating">
+                        <fieldset class="rating" name="rating" th:field="*{rating}">
                             <input type="radio" id="star5" name="rating" value="5"/><label class="full" for="star5"
                                                                                            title="Awesome - 5 stars"></label>
                             <!--<input type="radio" id="star4half" name="rating" value="4" /><label class="half" for="star4half" title="Pretty good - 4.5 stars"></label>-->
@@ -65,7 +62,10 @@
                                                                                            title="Sucks big time - 1 star"></label>
                             <!--<input type="radio" id="starhalf" name="rating" value="0" /><label class="half" for="starhalf" title="Sucks big time - 0.5 stars"></label>-->
                         </fieldset>
+                        <span th:if="${#fields.hasErrors('rating')}"
+                              th:errors="*{rating}">Rating can not be empty</span>
                     </div>
+
                 </div>
                 <br/>
                 <!-- Text input-->
@@ -76,10 +76,17 @@
                         <textarea rows="5" id="textinput5" name="textinput5"
                                   class="form-control input-md" th:field="*{content}"></textarea>
 
+                        <span th:if="${#fields.hasErrors('content')}"
+                              th:errors="*{content}">Content can not be empty</span>
                     </div>
+
                 </div>
 
-
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label><input type="checkbox" value="isAnonymous" name="isAnonymous">Leave anonymous comment</label>
+                    </div>
+                </div>
                 <br/>
                 <br/>
                 <!-- Button -->
@@ -115,6 +122,8 @@
                             <select class="form-control" id="sel4" th:name="userName" th:field="*{userName}">
                                 <option th:each="t :${user.ratableUserNames}" th:value="${t}" th:text="${t}"></option>
                             </select>
+                            <span th:if="${#fields.hasErrors('userName')}"
+                                  th:errors="*{userName}">User name error</span>
 
                         </div>
                     </div>
@@ -127,7 +136,7 @@
                         <label>Rating </label>
 
                         <div >
-                            <fieldset class="rating" name="rating">
+                            <fieldset class="rating" name="rating" th:field="*{rating}">
                                 <input type="radio" id="star15" name="rating" value="5"/><label class="full" for="star15"
                                                                                                title="Awesome - 5 stars"></label>
                                 <!--<input type="radio" id="star4half" name="rating" value="4" /><label class="half" for="star4half" title="Pretty good - 4.5 stars"></label>-->
@@ -144,6 +153,8 @@
                                                                                                title="Sucks big time - 1 star"></label>
                                 <!--<input type="radio" id="starhalf" name="rating" value="0" /><label class="half" for="starhalf" title="Sucks big time - 0.5 stars"></label>-->
                             </fieldset>
+                            <span th:if="${#fields.hasErrors('rating')}"
+                                  th:errors="*{rating}">Rating can not be empty</span>
                         </div>
                     </div>
                     <br/>
@@ -154,11 +165,16 @@
                         <div>
                         <textarea rows="5" id="textinput25" name="textinput25"
                                   class="form-control input-md" th:field="*{content}"></textarea>
-
+                            <span th:if="${#fields.hasErrors('content')}"
+                                  th:errors="*{content}">Content can not be empty</span>
                         </div>
                     </div>
 
-
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label><input type="checkbox" value="isAnonymous" name="isAnonymous">Leave anonymous comment</label>
+                    </div>
+                </div>
                     <br/>
                     <br/>
                     <!-- Button -->

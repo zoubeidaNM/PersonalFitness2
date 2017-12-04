@@ -11,8 +11,11 @@ import java.util.Set;
 
 @Entity
 public class Comment {
+
     public Comment() {
+
         users=new HashSet<FitnessUser>();
+        rating = 0;
     }
 
     public long getId() {
@@ -53,8 +56,8 @@ public class Comment {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private long id;
 
-    @NotNull
-    @NotEmpty
+//    @NotNull
+//    @NotEmpty
     private String content;
 
 
@@ -62,6 +65,7 @@ public class Comment {
 //    @JoinColumn(name="user_id")
 //    @ManyToMany(mappedBy="comments")
 //    private FitnessUser user;
+
 
 
     public Set<FitnessUser> getUsers() {

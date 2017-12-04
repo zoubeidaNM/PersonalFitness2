@@ -596,27 +596,28 @@ button.alt
     margin: 0 0.5em 0 0;
     color: #ffffff;
     background: green;
-    width: 1.5em;
-    height: 1.5em;
+    width: 2em;
+    height: 2em;
     font-size: 1em;
     text-align: center;
-    line-height: 1.5em;
+    line-height: 2em;
     border-radius: 100%;
-    box-shadow: 0 0 0 5px #fff, 0 0 0 6px rgba(144, 144, 144, 0.25);
+    box-shadow: 0 0 0 10px #fff, 0 0 0 11px rgba(144, 144, 144, 0.25);
 }
 
-.icon2.major_yellow {
+
+.icon2.major_red {
     display: inline-block;
     margin: 0 0.5em 0 0;
     color: #ffffff;
-    background: yellow;
-    width: 1.5em;
-    height: 1.5em;
+    background: red;
+    width: 2em;
+    height: 2em;
     font-size: 1em;
     text-align: center;
-    line-height: 1.5em;
+    line-height: 2em;
     border-radius: 100%;
-    box-shadow: 0 0 0 5px #fff, 0 0 0 6px rgba(144, 144, 144, 0.25);
+    box-shadow: 0 0 0 10px #fff, 0 0 0 11px rgba(144, 144, 144, 0.25);
 }
 
 
@@ -670,13 +671,13 @@ ol li {
 }
 
 ul {
-    list-style: disc;
-    margin: 0 0 2em 0;
-    padding-left: 1em;
+    list-style: none;
+    margin: 0 0 0 0;
+    padding-left: 0em;
 }
 
 ul li {
-    padding-left: 0.5em;
+    padding-left: 0;
 }
 
 ul.alt {
@@ -764,7 +765,7 @@ ul.actions.fit {
 
 ul.actions.fit li {
     display: table-cell;
-    padding: 0 0 0 1em;
+    padding: 0 0 0 0;
 }
 
 ul.actions.fit li > * {

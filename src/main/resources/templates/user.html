@@ -138,7 +138,7 @@
                         <div class="row">
                             <label class="4u right">by user: </label>
                             <div class="8u">
-                                <label th:inline="text">[[${comment.trainerName}]]</label>
+                                <label th:inline="text">[[${comment.sentby}]]</label>
                             </div>
                         </div>
 
@@ -167,7 +167,7 @@
                         <h2><i class="icon2 fa-sticky-note major_green"></i>Request Accepted</h2>
                     </div>
                     <div th:if="${request.status == 'Conflict'}">
-                        <h2><i class="icon2 fa-sticky-note major_yellow"></i>Request Conflict</h2>
+                        <h2><i class="icon2 fa-sticky-note major_red"></i>Request Conflict</h2>
                     </div>
                     <hr/>
 
@@ -198,8 +198,10 @@
                         </div>
                         <div class="row">
                             <label class="4u right">Status: </label>
-                            <div class="8u">
-                                <label th:inline="text">[[${request.status}]]</label>
+                            <div class="8u" >
+                                <label th:if="${request.status == 'Waiting'}" th:inline="text" style="color:#629DD1;">[[${request.status}]]</label>
+                                <label th:if="${request.status == 'Accepted'}" th:inline="text" style="color:green;">[[${request.status}]]</label>
+                                <label th:if="${request.status == 'Conflict'}" th:inline="text" style="color:red;">[[${request.status}]]</label>
                             </div>
                         </div>
                     </div>

@@ -92,9 +92,9 @@
                 </tr>
                 <tr class="active" th:each="user : ${searchedUsers}" th:unless="${user.suspended}">
                     <td th:text="${user.username}"></td>
-                    <td><span th:each="s :${user.specialties}"><span th:inline="text">[[${s.name}]] *  </span></span>
+                    <td><ul><li th:each="s :${user.specialties}" th:inline="text">[[${s.name}]]</li></ul>
                     </td>
-                    <td><span th:each="f :${user.fitnessLevels}"><span th:inline="text">[[${f.name}]] *  </span></span>
+                    <td><ul><li th:each="f :${user.fitnessLevels}" th:inline="text">[[${f.name}]]</li></ul>
                     </td>
                     <td>
 

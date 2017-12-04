@@ -7,7 +7,9 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -61,8 +63,9 @@ public class Request {
         showTrainer = true;
     }
 
-    public void processDate(){
+    public boolean processDate(){
         String dayStr;
+        boolean validDate=false;
         if(day<10) {
         dayStr="0"+day;
         }else{
@@ -70,7 +73,42 @@ public class Request {
         }
 
             date = dayStr+"/"+month+"/"+year;
+        DateTimeFormatter dTF = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter longFormat = DateTimeFormatter.ofPattern("dd MMMM yyyy");
+
+        LocalDate formattedDate=null;
+        try{
+            formattedDate = LocalDate.parse(date,dTF);
+             date = formattedDate.format(longFormat);
+             validDate = true;
+        }catch(Exception e)
+        {
+            System.out.println(e.toString());
+            validDate = false;
+        }
+
         System.out.println(date);
+        return validDate;
+    }
+
+    public boolean isDateInTheFuture() {
+        DateTimeFormatter longFormat = DateTimeFormatter.ofPattern("dd MMMM yyyy");
+        LocalDate formattedDate=null;
+        boolean isIntheFuture = false;
+        try{
+            formattedDate = LocalDate.parse(date,longFormat);
+
+            if(formattedDate.isAfter(LocalDate.now())) {
+                isIntheFuture= true;
+            }else{
+                isIntheFuture=  false;
+            }
+
+        }catch(Exception e)
+        {
+            System.out.println(e.toString());
+        }
+        return isIntheFuture;
     }
 
     public void processTime(){
