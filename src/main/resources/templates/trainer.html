@@ -163,7 +163,7 @@
             </div>
             <div class="8u skel-cell-important">
 
-                <section class="box_white" th:if="${#lists.isEmpty(user.requests)}">
+                <section class="box_white" th:if="${#lists.isEmpty(requests)}">
                     <h2><i class="icon2 fa-sticky-note major2"></i>Requests</h2>
                     <hr/>
 
@@ -171,7 +171,7 @@
                         <h3>No requests received</h3>
                     </div>
                 </section>
-                <section class="box_white" th:each="request :${user.requests}">
+                <section class="box_white" th:each="request :${requests}">
                     <div th:if="${request.receiverAnswer == 'Waiting'}">
                         <h2><i class="icon2 fa-sticky-note major2"></i>Request</h2>
                     </div>

@@ -5,10 +5,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 public class FitnessUser {
@@ -103,7 +100,7 @@ public class FitnessUser {
 
     public FitnessUser() {
         roles = new HashSet<UserRole>();
-        requests = new HashSet<Request>();
+        requests = new LinkedHashSet<Request>();
         specialties = new HashSet<Specialty>();
         fitnessLevels = new HashSet<FitnessLevel>();
 

@@ -67,6 +67,9 @@ public class HomeController {
         FitnessUser user = userRepository.findByUsername(principal.getName());
 
         model.addAttribute("user", user);
+        LinkedHashSet<Request> requests =requestRepository.findAllBySenderNameOrderByPosteddateDesc(user.getUsername());
+
+        model.addAttribute("requests", requests);
         return "user";
     }
 
@@ -76,9 +79,12 @@ public class HomeController {
 
 
         FitnessUser user = userRepository.findByUsername(principal.getName());
+        LinkedHashSet<Request> requests =requestRepository.findAllByReceiverNameOrderByPosteddateDesc(user.getUsername());
         System.out.println("User: " + user.getUsername());
         System.out.println("Comments size: " + user.getComments().size());
         model.addAttribute("user", user);
+
+        model.addAttribute("requests", requests);
         return "trainer";
     }
 
@@ -140,6 +146,7 @@ public class HomeController {
     @RequestMapping("/user/request")
     public String showRequest(Model model) {
 
+
         Request request = new Request();
 
         //set default dates
@@ -166,7 +173,8 @@ public class HomeController {
             System.out.println(result.toString());
             return "redirect:/user/request";
         } else {
-
+            Calendar calendar = Calendar.getInstance();
+            java.sql.Date ourJavaDateObject = new java.sql.Date(calendar.getTime().getTime());
 
             // validate date
 
@@ -203,23 +211,31 @@ public class HomeController {
             model.addAttribute("error_message", "The date chosen must be in the future. Try again!");
                 return "requestform";
         }
+            request.setPosteddate(ourJavaDateObject);
             request.processTime();
             request.setStatus("Waiting");
             request.setReceiverAnswer("Waiting");
             request.setSenderName(user.getUsername());
 
+
             FitnessUser trainer = userRepository.findByUsername(request.getReceiverName());
             trainer.setTrainerRequestFlag(true);
 
             requestRepository.save(request);
-
+            user.setRequests(requestRepository.findAllBySenderNameOrderByPosteddateDesc(user.getUsername()));
             user.addRequest(request);
+            trainer.setRequests(requestRepository.findAllByReceiverNameOrderByPosteddateDesc(trainer.getUsername()));
+
             trainer.addRequest(request);
 
             userRepository.save(user);
             userRepository.save(trainer);
 
             model.addAttribute("user", user);
+            LinkedHashSet<Request> requests =requestRepository.findAllBySenderNameOrderByPosteddateDesc(user.getUsername());
+
+            model.addAttribute("requests", requests);
+
             return "user";
         }
     }
@@ -358,6 +374,9 @@ public class HomeController {
         System.out.println("Comments size: " + trainer.getComments().size());
         userRepository.save(trainer);
         model.addAttribute("user", user);
+        LinkedHashSet<Request> requests =requestRepository.findAllBySenderNameOrderByPosteddateDesc(user.getUsername());
+
+        model.addAttribute("requests", requests);
         return "user";
 
     }
@@ -427,6 +446,10 @@ public class HomeController {
 
         userRepository.save(userAbout);
         model.addAttribute("user", user);
+        LinkedHashSet<Request> requests =requestRepository.findAllByReceiverNameOrderByPosteddateDesc(user.getUsername());
+
+        model.addAttribute("requests", requests);
+
         return "trainer";
 
     }
@@ -461,7 +484,9 @@ public class HomeController {
             e.printStackTrace();
             return "redirect:/user/choosepic";
         }
+        LinkedHashSet<Request> requests =requestRepository.findAllBySenderNameOrderByPosteddateDesc(user.getUsername());
 
+        model.addAttribute("requests", requests);
         return "user";
     }
 

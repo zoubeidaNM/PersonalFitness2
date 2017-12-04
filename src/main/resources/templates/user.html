@@ -147,19 +147,19 @@
                 </section>
             </div>
             <div class="8u skel-cell-important">
-                <div th:if="${#lists.isEmpty(user.requests)}">
+                <div th:if="${#lists.isEmpty(requests)}">
 
                     <section class="box_white">
                         <h2><i class="icon2 fa-sticky-note major2"></i>Requests</h2>
                         <hr/>
 
-                        <div th:if="${#lists.isEmpty(user.requests)}">
+                        <div th:if="${#lists.isEmpty(requests)}">
                             <h3>** add a request</h3>
                         </div>
                     </section>
                 </div>
 
-                <section class="box_white" th:each="request :${user.requests}">
+                <section class="box_white" th:each="request :${requests}">
                     <div th:if="${request.status == 'Waiting'}">
                     <h2><i class="icon2 fa-sticky-note major2"></i>Request</h2>
                     </div>

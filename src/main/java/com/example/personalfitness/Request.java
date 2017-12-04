@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -42,6 +43,16 @@ public class Request {
     private int hours;
     private int minutes;
 
+
+    public Date getPosteddate() {
+        return posteddate;
+    }
+
+    public void setPosteddate(Date posteddate) {
+        this.posteddate = posteddate;
+    }
+
+    private Date posteddate;
     @ManyToMany(mappedBy = "requests")
     private Set<FitnessUser> users;
 
@@ -274,4 +285,6 @@ public class Request {
     public void addDecliningTrainer(FitnessUser trainer){
         decliningtrainers.add(trainer);
     }
+
+
 }
