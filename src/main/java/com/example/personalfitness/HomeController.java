@@ -34,6 +34,10 @@ public class HomeController {
     @Autowired
     SpecialtyRepository specialties;
 
+    @Autowired
+    FitnessLevelRepository fitnessLevels;
+
+
 
     @Autowired
     CloudinaryConfig cloudc;
@@ -86,6 +90,7 @@ public class HomeController {
 
     @RequestMapping(value="/register", method = RequestMethod.GET)
     public String showRegistrationPage(Model model){
+        model.addAttribute("fitnessLevels", fitnessLevels.findAll());
         model.addAttribute("areas", areas.findAll());
         model.addAttribute("specialties", specialties.findAll());
         model.addAttribute("user", new FitnessUser());
@@ -101,6 +106,15 @@ public class HomeController {
         } else {
 
             if (userRepository.findByUsername(user.getUsername()) == null) {
+
+                // add the user to chosen specialtied
+                for (Specialty specialty:user.getSpecialties()){
+                    specialty.addUser(user);
+                }
+                // add the user to chosen fitness level
+                for (FitnessLevel fitnessLevel:user.getFitnessLevels()){
+                    fitnessLevel.addUser(user);
+                }
                 if (role.equalsIgnoreCase("USER")) {
                     userService.saveUser(user);
                 } else if (role.equalsIgnoreCase("TRAINER")) {
@@ -116,7 +130,7 @@ public class HomeController {
             model.addAttribute("user", user);
 
             System.out.println(user.getFirstName());
-            System.out.printf(""+user.getSpecialties().size());
+            System.out.printf("FitnessLevels size"+user.getFitnessLevels().size());
 
             return "login";
         }
@@ -402,6 +416,7 @@ public class HomeController {
         ArrayList<FitnessUser> searchedUsers = getUsersList("TRAINER");
         FitnessUser user = userRepository.findByUsername(principal.getName());
 
+        model.addAttribute("field", "all");
         model.addAttribute("searchedUsers", searchedUsers);
         model.addAttribute("user", user);
 
@@ -415,15 +430,18 @@ public class HomeController {
         FitnessUser user = userRepository.findByUsername(principal.getName());
         System.out.println("field " + searchField + " name"+ searchStr+"*");
 
-        if (searchField.equalsIgnoreCase("name")) {
-            Iterable<FitnessUser> users = userRepository.findAllByUsernameContaining(searchStr);
+        if (searchField.equalsIgnoreCase("all")) {
+            return "redirect:/user/search";
+        }
+           else if (searchField.equalsIgnoreCase("name")) {
+            Iterable<FitnessUser> users = userRepository.findAllByUsernameContainingIgnoreCase(searchStr);
             trainers = getUsersList("TRAINER", users);
             model.addAttribute("field", "name");
             model.addAttribute("searchstr", searchStr);
             model.addAttribute("searchedUsers", trainers);
             model.addAttribute("user", user);
         } else if (searchField.equalsIgnoreCase("gender")) {
-            Iterable<FitnessUser> users = userRepository.findAllByGenderContaining(searchStr);
+            Iterable<FitnessUser> users = userRepository.findAllByGenderIgnoreCase(searchStr);
             trainers = getUsersList("TRAINER", users);
             model.addAttribute("field", "gender");
             model.addAttribute("searchstr", searchStr);
@@ -431,18 +449,71 @@ public class HomeController {
             model.addAttribute("user", user);
     } else if (searchField.equalsIgnoreCase("rating")) {
             try {
-                int rating = Integer.parseInt(searchStr);
-                Iterable<FitnessUser> users = userRepository.findAllByAverageRatingContaining(rating);
+                System.out.println(" Rating = "+ searchStr+" *");
+                int rating = Integer.parseInt(searchStr.trim());
+                Iterable<FitnessUser> users = userRepository.findAllByAverageRating(rating);
+                //System.out.println("RatingSearchSize "+ users.size());
                 trainers = getUsersList("TRAINER", users);
                 model.addAttribute("field", "rating");
                 model.addAttribute("searchstr", searchStr);
                 model.addAttribute("searchedUsers", trainers);
                 model.addAttribute("user", user);
             }catch (Exception e){
+                System.out.println(e.toString());
                 model.addAttribute("user", user);
                 System.out.println("Rating have to be an int");
             }
-    }
+        } else if (searchField.equalsIgnoreCase("specialty")) {
+            Iterable<Specialty> specialties1 = specialties.findAllByNameContainingIgnoreCase(searchStr);
+             Set<FitnessUser> users2 = new HashSet<FitnessUser>();
+            //find the users who are trainers
+            for(Specialty specialty:specialties1) {
+                for (FitnessUser user1:specialty.getUsers()) {
+                    System.out.println("Specialty size " +  specialty.getUsers().size());
+                    users2.add(user1);
+                }
+            }
+
+            for(Specialty specialty:specialties1) {
+                for (FitnessUser user1 : specialty.getUsers()) {
+                    System.out.println("Specialty size " +  specialty.getUsers().size());
+                }
+            }
+            System.out.println("Specialty size " +  users2.size());
+            trainers = getUsersList("TRAINER", users2);
+            System.out.println("Specialty size " +  trainers.size());
+            model.addAttribute("field", "specialty");
+            model.addAttribute("searchstr", searchStr);
+            model.addAttribute("searchedUsers", trainers);
+            model.addAttribute("user", user);
+        }
+
+        else if (searchField.equalsIgnoreCase("fitnessLevel")) {
+
+            Iterable<FitnessLevel> fitnesslevels1 = fitnessLevels.findAllByNameContainingIgnoreCase(searchStr);
+            Set<FitnessUser> users2 = new HashSet<FitnessUser>();
+            //find the users who are trainers
+            for(FitnessLevel fitnessLevel:fitnesslevels1) {
+                for (FitnessUser user1:fitnessLevel.getFitnessLevelUsers()) {
+                    System.out.println(user.getUsername());
+                    System.out.println("FitnessLevel size " +  fitnessLevel.getFitnessLevelUsers().size());
+                    users2.add(user1);
+                }
+            }
+
+            for(FitnessLevel fitnessLevel:fitnesslevels1) {
+                for (FitnessUser user1 : fitnessLevel.getFitnessLevelUsers()) {
+                    System.out.println("FitnessLevel size " +  fitnessLevel.getFitnessLevelUsers().size());
+                }
+            }
+            System.out.println("FitnessLevel size " +  users2.size());
+            trainers = getUsersList("TRAINER", users2);
+            System.out.println("FitnessLevel size " +  trainers.size());
+            model.addAttribute("field", "fitnessLevel");
+            model.addAttribute("searchstr", searchStr);
+            model.addAttribute("searchedUsers", trainers);
+            model.addAttribute("user", user);
+        }
        return "searchresult";
 
     }

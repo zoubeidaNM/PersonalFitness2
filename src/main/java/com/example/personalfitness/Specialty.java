@@ -1,9 +1,8 @@
 package com.example.personalfitness;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Specialty {
@@ -13,12 +12,17 @@ public class Specialty {
 
     private String name;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Set<FitnessUser> users;
+
+
     public Specialty() {
+        users=new HashSet<FitnessUser>();
     }
 
-
-    public Specialty(String name) {
+     public Specialty(String name) {
         this.name = name;
+        users=new HashSet<FitnessUser>();
     }
 
     public String getName() {
@@ -35,5 +39,17 @@ public class Specialty {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public Set<FitnessUser> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<FitnessUser> users) {
+        this.users = users;
+    }
+
+    public void addUser(FitnessUser user){
+        users.add(user);
     }
 }

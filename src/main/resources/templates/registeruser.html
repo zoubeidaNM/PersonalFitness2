@@ -58,13 +58,11 @@
                   th:errors="*{contactNumber}">Contact number error</span>
           </div>
           <div class="form-group">
-            <label for="sel2">Fitness Level: (trainer choose "All")</label>
-            <select class="form-control" id="sel2" th:name="fitnessLevel">
-              <option th:value="Beginner">Beginner</option>
-              <option th:value="Intermediate">Intermediate</option>
-              <option th:value="Advanced">Advanced</option>
-              <option th:value="All">All</option>
+            <label for="sel2">Fitness Level: (usre choose only one)</label>
+            <select class="form-control" id="sel2" th:name="fitnessLevels" th:field="*{fitnessLevels}" multiple="multiple">
+              <option th:each="f :${fitnessLevels}" th:value="${f.id}" th:text="${f.name}"></option>
             </select>
+
           </div>
 
           <div class="form-group">
@@ -82,7 +80,7 @@
             </select>
           </div>
           <div class="form-group">
-            <label for="sel5">Need/Specialty:</label>
+            <label for="sel5">Need/Specialty : (usre choose only one) </label>
             <select class="form-control" id="sel5" th:name="specialties" th:field="*{specialties}" multiple="multiple">
               <option th:each="s :${specialties}" th:value="${s.id}" th:text="${s.name}"></option>
             </select>

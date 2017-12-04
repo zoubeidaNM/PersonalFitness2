@@ -39,10 +39,10 @@ public class FitnessUser {
     @Column(name = "contact")
     private String contactNumber;
 
-    @NotNull
-    @NotEmpty
-    @Column(name = "fitness_level")
-    private String fitnessLevel;
+//    @NotNull
+//    @NotEmpty
+//    @Column(name = "fitness_level")
+//    private String fitnessLevel;
 
 
     // Trainer will choose ALL.
@@ -94,15 +94,19 @@ public class FitnessUser {
     @ManyToMany
     private Set<Request> trainerDeclinedRequests;
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "users",fetch = FetchType.LAZY)
     private Set<Specialty> specialties;
 
+    @ManyToMany(mappedBy = "fitnessLevelUsers",fetch = FetchType.LAZY)
+    private Set<FitnessLevel> fitnessLevels;
 
 
     public FitnessUser() {
         roles = new HashSet<UserRole>();
         requests = new HashSet<Request>();
         specialties = new HashSet<Specialty>();
+        fitnessLevels = new HashSet<FitnessLevel>();
+
         trainerDeclinedRequests = new HashSet<Request>();
         ratableUserNames = new ArrayList<String>();
         averageRating = 0;
@@ -164,13 +168,13 @@ public class FitnessUser {
         this.contactNumber = contactNumber;
     }
 
-    public String getFitnessLevel() {
-        return fitnessLevel;
-    }
-
-    public void setFitnessLevel(String fitnessLevel) {
-        this.fitnessLevel = fitnessLevel;
-    }
+//    public String getFitnessLevel() {
+//        return fitnessLevel;
+//    }
+//
+//    public void setFitnessLevel(String fitnessLevel) {
+//        this.fitnessLevel = fitnessLevel;
+//    }
 
     public String getArea() {
         return area;
@@ -225,6 +229,9 @@ public class FitnessUser {
         specialties.add(specialty);
     }
 
+    public void addFitnessLevel(FitnessLevel fitnessLevel) {
+        fitnessLevels.add(fitnessLevel);
+    }
     public void addRequest(Request request) {
         requests.add(request);
     }
@@ -322,5 +329,13 @@ public class FitnessUser {
 
     public void addRatableUserName(String name) {
         ratableUserNames.add(name);
+    }
+
+    public Set<FitnessLevel> getFitnessLevels() {
+        return fitnessLevels;
+    }
+
+    public void setFitnessLevels(Set<FitnessLevel> fitnessLevels) {
+        this.fitnessLevels = fitnessLevels;
     }
 }
