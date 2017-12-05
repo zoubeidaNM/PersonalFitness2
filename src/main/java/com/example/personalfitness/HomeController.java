@@ -138,8 +138,11 @@ public class HomeController {
             } else  {
                 model.addAttribute("error", true);
                 model.addAttribute("error_message", "Username already exists. Try again!");
+                model.addAttribute("fitnessLevels", fitnessLevels.findAll());
+                model.addAttribute("areas", areas.findAll());
+                model.addAttribute("specialties", specialties.findAll());
+                return "registeruser";
 
-                return "redirect:/register";
             }
             model.addAttribute("user", user);
 
