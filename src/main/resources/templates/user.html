@@ -35,9 +35,8 @@
     <nav class="collapse navbar-collapse" id="nav2">
         <ul>
              <li><a href="/user">home</a></li>
-            <li><span  href="#" th:if="${user.userRequestFlag}"><i class="fa fa-fw fa-bell" style="color:red;"></i>
-                <span style="color:red;">New Request</span></span></li>
-            <span  href="#" th:unless="${user.userRequestFlag}"><i class="fa fa-fw fa-bell"></i></span></li>
+            <li th:if="${user.userRequestFlag}" ><a href="#" ><i class="fa fa-fw fa-bell" style="color:red;"></i>
+                New Answer</a></li>
             <li><a href="/user/request">Add Request</a></li>
             <li><a href="/user/comment">Rate Trainer</a></li>
             <li><a href="/user/search">Show Trainers</a></li>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
+<html lang="en" lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org"
+      xmlns:sec="www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 
 <head>
     <meta charset="utf-8">
@@ -13,14 +14,14 @@
     <!-- Custom fonts for this template-->
     <link href="/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <!-- Custom styles for this template-->
-    <link href=/"css/sb-admin.css" rel="stylesheet">
+    <link href="/css/sb-admin.css" rel="stylesheet">
 </head>
 
 <body class="body_bg2">
 <div class="container">
     <div class="card card-register mx-auto mt-5 border_solid">
         <div class="card-header">Choose a picture</div>
-        <div class="card-body">
+        <div class="card-body" sec:authorize="hasAuthority('USER')">
             <form autocomplete="off" action="#" th:action="@{/user/choosepic}" th:object="${user}" method="post" enctype="multipart/form-data">
                 <div th:if="${error}" class="has-error text-danger" th:text="${error_message}"></div>
                 <br/>
@@ -35,6 +36,24 @@
             <br/>
             <div class="text-center">
                 <a class="d-block medium" href="/user">Return Profile</a>
+            </div>
+        </div>
+
+        <div class="card-body" sec:authorize="hasAuthority('TRAINER')">
+            <form autocomplete="off" action="#" th:action="@{/tariner/choosepic}" th:object="${user}" method="post" enctype="multipart/form-data">
+                <div th:if="${error}" class="has-error text-danger" th:text="${error_message}"></div>
+                <br/>
+                <div class="form-group">
+                    <label for="image_uploads"th:inline="text"> [[${user.username}]] Choose images to upload (PNG, JPG)</label>
+                    <input type="file" class="form-control" id="image_uploads" name="imagefile" accept=".jpg, .jpeg, .png" ld="">
+                    <br/>
+                    <br/>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Save Image</button>
+            </form>
+            <br/>
+            <div class="text-center">
+                <a class="d-block medium" href="/tariner">Return Profile</a>
             </div>
         </div>
     </div>

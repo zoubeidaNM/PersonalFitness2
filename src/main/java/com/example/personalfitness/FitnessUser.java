@@ -1,6 +1,7 @@
 package com.example.personalfitness;
 
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.security.core.userdetails.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -75,6 +76,8 @@ public class FitnessUser {
 
     private boolean suspended;
 
+    private String oldRole;
+
     ArrayList<String> ratableUserNames;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -113,6 +116,8 @@ public class FitnessUser {
         userRequestFlag = false;
         trainerRequestFlag = false;
         suspended = false;
+
+        oldRole ="NoRole";
 
     }
 
@@ -292,6 +297,13 @@ public class FitnessUser {
 
     }
 
+    public void addRole(UserRole role){
+        roles.add(role);
+    }
+    public void removeRole(UserRole role){
+        roles.remove(role);
+    }
+
     public Set<Specialty> getSpecialties() {
         return specialties;
     }
@@ -334,5 +346,13 @@ public class FitnessUser {
 
     public void setFitnessLevels(Set<FitnessLevel> fitnessLevels) {
         this.fitnessLevels = fitnessLevels;
+    }
+
+    public String getOldRole() {
+        return oldRole;
+    }
+
+    public void setOldRole(String oldRole) {
+        this.oldRole = oldRole;
     }
 }

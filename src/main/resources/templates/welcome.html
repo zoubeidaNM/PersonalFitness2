@@ -22,25 +22,48 @@
 
             <div sec:authorize="isAuthenticated()">
 
-                <div sec:authorize ="hasAuthority('ADMIN') ">
+                <div sec:authorize ="hasAuthority('SUSPENDED') ">
+                    <h1 th:field="*{user}" th:inline="text" class="text-center">Hello [[${user.firstName}]]</h1>
+                    <br/>
+                    <br/>
+                    <h3 class = "text-center text-danger" >Your account has been suspended.</h3>
+                    <h3 class = "text-center text-danger"> Call 1-888-444-0000. </h3>
+                </div>
+
+                <div sec:authorize="hasAuthority('TRAINER') and hasAuthority('ADMIN')">
+                    <h1 th:field="*{user}" th:inline="text" class="text-center">Hello trainer & Admin [[${user.firstName}]] </h1>
+                    <br/>
+                    <br/>
+                    <a href="/trainer">
+                        <button type="submit" class="btn btn-primary btn-block">Go to Your Trainer Profile</button>
+                    </a>
+                    <br/>
+                    <br/>
+                    <hr/>
+                    <br/>
+                    <br/>
+                    <a href="/admin">
+                        <button type="submit" class="btn btn-primary btn-block">Go to Your Admin Profile</button>
+                    </a>
+                </div>
+
+                <div sec:authorize ="hasAuthority('TRAINER') and !hasAuthority('ADMIN')">
+                    <h1 th:field="*{user}" th:inline="text" class="text-center">Hello Trainer [[${user.firstName}]]</h1>
+                    <br/>
+                    <br/>
+                    <a href="/trainer">
+                        <button type="submit" class="btn btn-primary btn-block">Go to Your Trainer Profile</button>
+                    </a>
+                </div>
+
+                <div sec:authorize ="hasAuthority('ADMIN') and !hasAuthority('TRAINER')">
                     <h1 th:field="*{user}" th:inline="text" class="text-center">Hello admin [[${user.firstName}]]</h1>
                     <br/>
                     <br/>
                     <a href="/admin">
-                        <button type="submit" class="btn btn-primary btn-block">Go to Profile</button>
+                        <button type="submit" class="btn btn-primary btn-block">Go to Your Admin Profile</button>
                     </a>
                 </div>
-
-
-                <div sec:authorize="hasAuthority('TRAINER') and !hasAuthority('ADMIN')">
-                    <h1 th:field="*{user}" th:inline="text" class="text-center">Hello trainer [[${user.firstName}]] </h1>
-                    <br/>
-                    <br/>
-                    <a href="/trainer">
-                        <button type="submit" class="btn btn-primary btn-block">Go to Profile</button>
-                    </a>
-                </div>
-
 
 
                 <div sec:authorize="hasAuthority('USER')">
@@ -48,7 +71,7 @@
                     <br/>
                     <br/>
                     <a href="/user">
-                        <button type="submit" class="btn btn-primary btn-block">Go to Profile</button>
+                        <button type="submit" class="btn btn-primary btn-block">Go to Your Profile</button>
                     </a>
                 </div>
 

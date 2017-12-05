@@ -40,6 +40,7 @@ class DataLoader implements CommandLineRunner {
         roleRepository.save(new UserRole("USER"));
         roleRepository.save(new UserRole("TRAINER"));
         roleRepository.save(new UserRole("ADMIN"));
+        roleRepository.save(new UserRole("SUSPENDED"));
 
         UserRole userRole = roleRepository.findByRole("USER");
         UserRole trainerRole = roleRepository.findByRole("TRAINER");

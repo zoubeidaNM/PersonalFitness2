@@ -25,6 +25,9 @@ public class HomeController {
     UserRepository userRepository;
 
     @Autowired
+    RoleRepository roleRepository;
+
+     @Autowired
     RequestRepository requestRepository;
 
 
@@ -79,11 +82,8 @@ public class HomeController {
 
 
         FitnessUser user = userRepository.findByUsername(principal.getName());
-        LinkedHashSet<Request> requests =requestRepository.findAllByReceiverNameOrderByPosteddateDesc(user.getUsername());
-        System.out.println("User: " + user.getUsername());
-        System.out.println("Comments size: " + user.getComments().size());
+        LinkedHashSet<Request> requests = requestRepository.findAllByReceiverNameOrderByPosteddateDesc(user.getUsername());
         model.addAttribute("user", user);
-
         model.addAttribute("requests", requests);
         return "trainer";
     }
@@ -144,8 +144,11 @@ public class HomeController {
 
 
     @RequestMapping("/user/request")
-    public String showRequest(Model model) {
+    public String showRequest(Principal principal, Model model) {
 
+        FitnessUser user = userRepository.findByUsername(principal.getName());
+        user.setUserRequestFlag(false);
+        userRepository.save(user);
 
         Request request = new Request();
 
@@ -171,7 +174,12 @@ public class HomeController {
         FitnessUser user = userRepository.findByUsername(principal.getName());
         if (result.hasErrors()) {
             System.out.println(result.toString());
-            return "redirect:/user/request";
+            String names[] = get_trainerNames();
+            model.addAttribute("names", names);
+
+            //get the areas
+            model.addAttribute("areas", areas.findAll());
+            return "requestform";
         } else {
             Calendar calendar = Calendar.getInstance();
             java.sql.Date ourJavaDateObject = new java.sql.Date(calendar.getTime().getTime());
@@ -303,6 +311,7 @@ public class HomeController {
 
         requestRepository.save(request);
         trainerUser.setTrainerRequestFlag(false);
+        userRepository.save(user);
         model.addAttribute("user", trainerUser);
 
         return "redirect:/trainer";
@@ -311,6 +320,9 @@ public class HomeController {
     @RequestMapping("/user/comment")
     public String showComment(Principal principal, Model model) {
         FitnessUser user = userRepository.findByUsername(principal.getName());
+
+        user.setUserRequestFlag(false);
+        userRepository.save(user);
 
         Comment comment = new Comment();
         model.addAttribute("user", user);
@@ -530,8 +542,9 @@ public class HomeController {
 
         ArrayList<FitnessUser> searchedUsers = getUsersList("TRAINER");
         FitnessUser user = userRepository.findByUsername(principal.getName());
-
-        model.addAttribute("field", "all");
+        user.setUserRequestFlag(false);
+        userRepository.save(user);
+       model.addAttribute("field", "all");
         model.addAttribute("searchedUsers", searchedUsers);
         model.addAttribute("user", user);
 
@@ -602,7 +615,7 @@ public class HomeController {
             model.addAttribute("user", user);
         } else if (searchField.equalsIgnoreCase("fitnessLevel")) {
 
-            Iterable<FitnessLevel> fitnesslevels1 = fitnessLevels.findAllByNameContainingIgnoreCase(searchStr);
+            Iterable<FitnessLevel> fitnesslevels1 = fitnessLevels.findAllByNameContainingIgnoreCaseOrNameContainingIgnoreCase(searchStr, "All");
             Set<FitnessUser> users2 = new HashSet<FitnessUser>();
             //find the users who are trainers
             for (FitnessLevel fitnessLevel : fitnesslevels1) {
@@ -647,8 +660,10 @@ public class HomeController {
 
         FitnessUser user = userRepository.findByUsername(principal.getName());
 
-        ArrayList<FitnessUser> users = getUsersList("USER");
-        ArrayList<FitnessUser> trainers = getUsersList("TRAINER");
+        ArrayList<FitnessUser> users = getCompleteUsersList("USER");
+        ArrayList<FitnessUser> trainers = getCompleteUsersList("TRAINER");
+
+
 
         model.addAttribute("user", user);
         model.addAttribute("manageUsers", false);
@@ -662,12 +677,32 @@ public class HomeController {
         return "admin";
     }
 
+    @RequestMapping("/admin/suspended")
+    public String namageSuspended(Principal principal, Model model) {
+        FitnessUser user = userRepository.findByUsername(principal.getName());
+
+        ArrayList<FitnessUser> users = getCompleteUsersList("USER");
+        ArrayList<FitnessUser> trainers = getCompleteUsersList("TRAINER");
+
+        model.addAttribute("user", user);
+        model.addAttribute("manageUsers", false);
+        model.addAttribute("manageTrainers", false);
+        model.addAttribute("manageAreas", false);
+        model.addAttribute("manageSpecialties", false);
+        model.addAttribute("users", users);
+        model.addAttribute("trainers", trainers);
+        model.addAttribute("areas", areas.findAll());
+        model.addAttribute("specialties", specialties.findAll());
+        return "redirect:/admin";
+
+    }
+
     @RequestMapping("/admin/users")
     public String namageUsers(Principal principal, Model model) {
         FitnessUser user = userRepository.findByUsername(principal.getName());
 
-        ArrayList<FitnessUser> users = getUsersList("USER");
-        ArrayList<FitnessUser> trainers = getUsersList("TRAINER");
+        ArrayList<FitnessUser> users = getCompleteUsersList("USER");
+        ArrayList<FitnessUser> trainers = getCompleteUsersList("TRAINER");
 
         model.addAttribute("user", user);
         model.addAttribute("manageUsers", true);
@@ -685,8 +720,8 @@ public class HomeController {
     public String namageTrainers(Principal principal, Model model) {
         FitnessUser user = userRepository.findByUsername(principal.getName());
 
-        ArrayList<FitnessUser> users = getUsersList("USER");
-        ArrayList<FitnessUser> trainers = getUsersList("TRAINER");
+        ArrayList<FitnessUser> users = getCompleteUsersList("USER");
+        ArrayList<FitnessUser> trainers = getCompleteUsersList("TRAINER");
 
         model.addAttribute("user", user);
         model.addAttribute("manageUsers", false);
@@ -704,8 +739,8 @@ public class HomeController {
     public String namageAreas(Principal principal, Model model) {
         FitnessUser user = userRepository.findByUsername(principal.getName());
 
-        ArrayList<FitnessUser> users = getUsersList("USER");
-        ArrayList<FitnessUser> trainers = getUsersList("TRAINER");
+        ArrayList<FitnessUser> users = getCompleteUsersList("USER");
+        ArrayList<FitnessUser> trainers = getCompleteUsersList("TRAINER");
 
         model.addAttribute("user", user);
         model.addAttribute("manageUsers", false);
@@ -724,8 +759,8 @@ public class HomeController {
     public String namageSpecialties(Principal principal, Model model) {
         FitnessUser user = userRepository.findByUsername(principal.getName());
 
-        ArrayList<FitnessUser> users = getUsersList("USER");
-        ArrayList<FitnessUser> trainers = getUsersList("TRAINER");
+        ArrayList<FitnessUser> users = getCompleteUsersList("USER");
+        ArrayList<FitnessUser> trainers = getCompleteUsersList("TRAINER");
 
         model.addAttribute("user", user);
         model.addAttribute("manageUsers", false);
@@ -744,7 +779,10 @@ public class HomeController {
     public String suspendUser(@PathVariable("id") long id, Model model) {
         FitnessUser user = userRepository.findOne(id);
         user.setSuspended(true);
-        //user.setRoles(Arrays.asList(SuspendedRole));
+        user.removeRole(roleRepository.findByRole("USER"));
+        userRepository.save(user);
+        user.addRole(roleRepository.findByRole("SUSPENDED"));
+        user.setOldRole("USER");
         userRepository.save(user);
         return "redirect:/admin/users";
     }
@@ -753,7 +791,9 @@ public class HomeController {
     public String unsuspendUser(@PathVariable("id") long id, Model model) {
         FitnessUser user = userRepository.findOne(id);
         user.setSuspended(false);
-        //user.setRoles(Arrays.asList(SuspendedRole));
+        user.removeRole(roleRepository.findByRole("SUSPENDED"));
+        userRepository.save(user);
+        user.addRole(roleRepository.findByRole("USER"));
         userRepository.save(user);
         return "redirect:/admin/users";
     }
@@ -762,7 +802,10 @@ public class HomeController {
     public String suspendTrainer(@PathVariable("id") long id, Model model) {
         FitnessUser user = userRepository.findOne(id);
         user.setSuspended(true);
-        //user.setRoles(Arrays.asList(SuspendedRole));
+        user.removeRole(roleRepository.findByRole("TRAINER"));
+        userRepository.save(user);
+        user.addRole(roleRepository.findByRole("SUSPENDED"));
+        user.setOldRole("TRAINER");
         userRepository.save(user);
         return "redirect:/admin/trainers";
     }
@@ -771,6 +814,9 @@ public class HomeController {
     public String unsuspendTrainer(@PathVariable("id") long id, Model model) {
         FitnessUser user = userRepository.findOne(id);
         user.setSuspended(false);
+        user.removeRole(roleRepository.findByRole("SUSPENDED"));
+        userRepository.save(user);
+        user.addRole(roleRepository.findByRole("TRAINER"));
         userRepository.save(user);
         return "redirect:/admin/trainers";
     }
@@ -820,6 +866,27 @@ public class HomeController {
                     searchedUsers.add(user);
                     System.out.println(user.getUsername() + "  " + user.isSuspended());
                 }
+            }
+        }
+        return searchedUsers;
+
+    }
+
+    public ArrayList<FitnessUser> getCompleteUsersList(String roleName) {
+
+        ArrayList<FitnessUser> searchedUsers = new ArrayList<FitnessUser>();
+
+        Iterable<FitnessUser> users = userRepository.findAll();
+
+        for (FitnessUser user : users) {
+            for (UserRole role : (user.getRoles())) {
+                if (role.getRole().equalsIgnoreCase(roleName)) {
+                    searchedUsers.add(user);
+                    System.out.println(user.getUsername() + "  " + user.isSuspended());
+                }
+            }
+            if(user.getOldRole().equalsIgnoreCase(roleName) && !searchedUsers.contains(users)){
+                searchedUsers.add(user);
             }
         }
         return searchedUsers;
