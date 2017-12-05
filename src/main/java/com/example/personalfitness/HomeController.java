@@ -428,6 +428,9 @@ public class HomeController {
         Calendar calendar = Calendar.getInstance();
         java.sql.Date ourJavaDateObject = new java.sql.Date(calendar.getTime().getTime());
         comment.addUser(user);
+        if(isAnonymous==null){
+            isAnonymous="";
+        }
         System.out.println("isAnonymous: "+ isAnonymous);
         if (isAnonymous.equals("isAnonymous")) {
             comment.setSentby("Anonymous");
