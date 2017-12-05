@@ -69,10 +69,12 @@ public class HomeController {
 
         FitnessUser user = userRepository.findByUsername(principal.getName());
 
-        model.addAttribute("user", user);
         LinkedHashSet<Request> requests =requestRepository.findAllBySenderNameOrderByPosteddateDesc(user.getUsername());
+        LinkedHashSet<Comment> comments = commentRepository.findAllByUserNameOrderByPosteddateDesc(user.getUsername());
 
+        model.addAttribute("user", user);
         model.addAttribute("requests", requests);
+        model.addAttribute("comments", comments);
         return "user";
     }
 
