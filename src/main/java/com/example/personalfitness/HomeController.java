@@ -70,11 +70,12 @@ public class HomeController {
         FitnessUser user = userRepository.findByUsername(principal.getName());
 
         LinkedHashSet<Request> requests =requestRepository.findAllBySenderNameOrderByPosteddateDesc(user.getUsername());
-//        LinkedHashSet<Comment> comments = commentRepository.findAllByUserNameOrderByPosteddateDesc(user.getUsername());
+       LinkedHashSet<Comment> comments = commentRepository.findAllByReceiverNameOrderByPosteddateDesc(user.getUsername());
 
         model.addAttribute("user", user);
         model.addAttribute("requests", requests);
-//        model.addAttribute("comments", comments);
+//        LinkedHashSet<Comment> comments = commentRepository.findAllByReceiverNameOrderByPosteddateDesc(user.getUsername());
+        model.addAttribute("comments", comments);
         return "user";
     }
 
@@ -87,6 +88,8 @@ public class HomeController {
         LinkedHashSet<Request> requests = requestRepository.findAllByReceiverNameOrderByPosteddateDesc(user.getUsername());
         model.addAttribute("user", user);
         model.addAttribute("requests", requests);
+        LinkedHashSet<Comment> comments = commentRepository.findAllByReceiverNameOrderByPosteddateDesc(user.getUsername());
+        model.addAttribute("comments", comments);
         return "trainer";
     }
 
@@ -110,7 +113,10 @@ public class HomeController {
                                           BindingResult result, @RequestParam String role, Model model) {
         if (result.hasErrors()) {
             System.out.println(result.toString());
-            return "redirect:/register";
+            model.addAttribute("fitnessLevels", fitnessLevels.findAll());
+            model.addAttribute("areas", areas.findAll());
+            model.addAttribute("specialties", specialties.findAll());
+            return "registeruser";
         } else {
 
             if (userRepository.findByUsername(user.getUsername()) == null) {
@@ -129,7 +135,7 @@ public class HomeController {
                     userService.saveTrainer(user);
                 }
                 model.addAttribute("message", "User Account Successfully Created");
-            } else if (userRepository.findByUsername(user.getUsername()) == null) {
+            } else  {
                 model.addAttribute("error", true);
                 model.addAttribute("error_message", "Username already exists. Try again!");
 
@@ -245,7 +251,8 @@ public class HomeController {
             LinkedHashSet<Request> requests =requestRepository.findAllBySenderNameOrderByPosteddateDesc(user.getUsername());
 
             model.addAttribute("requests", requests);
-
+            LinkedHashSet<Comment> comments = commentRepository.findAllByReceiverNameOrderByPosteddateDesc(user.getUsername());
+            model.addAttribute("comments", comments);
             return "user";
         }
     }
@@ -384,6 +391,7 @@ public class HomeController {
         comment.setRating(rating);
         FitnessUser trainer = userRepository.findByUsername(comment.getTrainerName());
         comment.setUserName(user.getUsername());
+        comment.setReceiverName(trainer.getUsername());
         commentRepository.save(comment);
         trainer.addComment(comment);
         trainer.computeAverageRating();
@@ -394,6 +402,8 @@ public class HomeController {
         LinkedHashSet<Request> requests =requestRepository.findAllBySenderNameOrderByPosteddateDesc(user.getUsername());
 
         model.addAttribute("requests", requests);
+        LinkedHashSet<Comment> comments = commentRepository.findAllByReceiverNameOrderByPosteddateDesc(user.getUsername());
+        model.addAttribute("comments", comments);
         return "user";
 
     }
@@ -458,6 +468,7 @@ public class HomeController {
         comment.setRating(rating);
         FitnessUser userAbout = userRepository.findByUsername(comment.getUserName());
         comment.setTrainerName(user.getUsername());
+        comment.setReceiverName(userAbout.getUsername());
         commentRepository.save(comment);
         userAbout.addComment(comment);
         userAbout.computeAverageRating();
@@ -469,7 +480,8 @@ public class HomeController {
         LinkedHashSet<Request> requests =requestRepository.findAllByReceiverNameOrderByPosteddateDesc(user.getUsername());
 
         model.addAttribute("requests", requests);
-
+        LinkedHashSet<Comment> comments = commentRepository.findAllByReceiverNameOrderByPosteddateDesc(user.getUsername());
+        model.addAttribute("comments", comments);
         return "trainer";
 
     }
@@ -505,8 +517,9 @@ public class HomeController {
             return "redirect:/user/choosepic";
         }
         LinkedHashSet<Request> requests =requestRepository.findAllBySenderNameOrderByPosteddateDesc(user.getUsername());
-
         model.addAttribute("requests", requests);
+        LinkedHashSet<Comment> comments = commentRepository.findAllByReceiverNameOrderByPosteddateDesc(user.getUsername());
+        model.addAttribute("comments", comments);
         return "user";
     }
 

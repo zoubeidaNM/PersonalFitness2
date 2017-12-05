@@ -40,7 +40,7 @@
         </div>
 
         <div class="card-body" sec:authorize="hasAuthority('TRAINER')">
-            <form autocomplete="off" action="#" th:action="@{/tariner/choosepic}" th:object="${user}" method="post" enctype="multipart/form-data">
+            <form autocomplete="off" action="#" th:action="@{/trainer/choosepic}" th:object="${user}" method="post" enctype="multipart/form-data">
                 <div th:if="${error}" class="has-error text-danger" th:text="${error_message}"></div>
                 <br/>
                 <div class="form-group">
@@ -53,7 +53,7 @@
             </form>
             <br/>
             <div class="text-center">
-                <a class="d-block medium" href="/tariner">Return Profile</a>
+                <a class="d-block medium" href="/trainer">Return Profile</a>
             </div>
         </div>
     </div>

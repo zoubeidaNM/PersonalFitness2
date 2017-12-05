@@ -85,6 +85,21 @@ public class Comment {
     private String sentby;
 
 
+    private String userName;
+
+
+    private String trainerName;
+
+    private String receiverName;
+
+    public String getReceiverName() {
+        return receiverName;
+    }
+
+    public void setReceiverName(String receiverName) {
+        this.receiverName = receiverName;
+    }
+
     public String getUserName() {
         return userName;
     }
@@ -92,11 +107,6 @@ public class Comment {
     public void setUserName(String userName) {
         this.userName = userName;
     }
-
-    private String userName;
-
-
-    private String trainerName;
 
     public String getTrainerName() {
         return trainerName;
