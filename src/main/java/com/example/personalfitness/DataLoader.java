@@ -92,7 +92,7 @@ class DataLoader implements CommandLineRunner {
         user.setRoles(Arrays.asList(userRole));
         user.setArea("Frederick County");
         user.setGender("Male");
-
+        user.setHeadshot("/images/bob.jpg");
         userRepository.save(user);
         DateTimeFormatter dTF = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         DateTimeFormatter hr24 = DateTimeFormatter.ofPattern("kk:m");
@@ -129,8 +129,7 @@ class DataLoader implements CommandLineRunner {
         user.setRoles(Arrays.asList(trainerRole));
         user.setArea("All");
         user.setGender("Male");
-        user.setAverageRating(5);
-
+        user.setHeadshot("/images/sam.jpg");
 
         userRepository.save(user);
 
@@ -175,7 +174,7 @@ class DataLoader implements CommandLineRunner {
         user.setArea("All");
         user.setGender("Male");
         user.setAverageRating(4);
-
+user.setHeadshot("/images/shaun.jpg");
         userRepository.save(user);
 
         specialty = specialties.findByName("Weight Training");
@@ -209,7 +208,7 @@ class DataLoader implements CommandLineRunner {
         user.setArea("All");
         user.setGender("Male");
         user.setAverageRating(2);
-
+        user.setHeadshot("/images/tony.jpg");
         userRepository.save(user);
 
         fitnessLevel = fitnessLevels.findByName("Beginner");
@@ -245,7 +244,7 @@ class DataLoader implements CommandLineRunner {
         user.setArea("All");
         user.setGender("Female");
         user.setAverageRating(5);
-
+        user.setHeadshot("/images/camille.jpg");
         userRepository.save(user);
 
         fitnessLevel = fitnessLevels.findByName("Beginner");
@@ -286,7 +285,7 @@ class DataLoader implements CommandLineRunner {
         user.setArea("All");
         user.setGender("Male");
         user.setAverageRating(5);
-
+        user.setHeadshot("/images/vince.jpg");
         userRepository.save(user);
 
 
@@ -328,7 +327,7 @@ class DataLoader implements CommandLineRunner {
         user.setArea("All");
         user.setGender("Male");
         user.setAverageRating(4);
-
+        user.setHeadshot("/images/gilbert.jpg");
 
         userRepository.save(user);
 
@@ -370,6 +369,7 @@ class DataLoader implements CommandLineRunner {
         user.setArea("All");
         user.setGender("Female");
         user.setAverageRating(5);
+        user.setHeadshot("/images/michelle.jpg");
 
 
         userRepository.save(user);
@@ -412,7 +412,7 @@ class DataLoader implements CommandLineRunner {
         user.setArea("Montgomery County");
         user.setGender("Female");
         user.setAverageRating(3);
-
+        user.setHeadshot("/images/danielle.jpg");
 
         userRepository.save(user);
 
@@ -451,7 +451,7 @@ class DataLoader implements CommandLineRunner {
         user.setArea("All");
         user.setGender("Female");
         user.setAverageRating(4);
-
+        user.setHeadshot("/images/nathalie.jpg");
         userRepository.save(user);
 
 
@@ -482,7 +482,7 @@ class DataLoader implements CommandLineRunner {
         user.setRoles(Arrays.asList(userRole));
         user.setArea("Prince George's County");
         user.setGender("Female");
-
+        user.setHeadshot("/images/blanca.jpg");
         userRepository.save(user);
 
 
@@ -521,6 +521,7 @@ class DataLoader implements CommandLineRunner {
         user.setArea("Frederick County");
         user.setGender("Male");
         user.setAverageRating(3);
+        user.setHeadshot("/images/jim.jpg");
         userRepository.save(user);
 
 
@@ -551,6 +552,7 @@ class DataLoader implements CommandLineRunner {
         user.setArea("Prince George's County");
         user.setGender("Male");
         user.setAverageRating(3);
+        user.setHeadshot("/images/xavier.jpg");
         userRepository.save(user);
 
 
@@ -587,6 +589,7 @@ class DataLoader implements CommandLineRunner {
         user.setArea("Montgomery County");
         user.setGender("Female");
         user.setAverageRating(4);
+        user.setHeadshot("/images/sonia.jpg");
         userRepository.save(user);
 
 
@@ -618,7 +621,7 @@ class DataLoader implements CommandLineRunner {
         user.setRoles(Arrays.asList(userRole));
         user.setArea("Montgomery County");
         user.setGender("Female");
-
+user.setHeadshot("/images/miriam.jpg");
         userRepository.save(user);
 
 
@@ -656,7 +659,7 @@ class DataLoader implements CommandLineRunner {
         user.setRoles(Arrays.asList(userRole));
         user.setArea("Montgomery County");
         user.setGender("Female");
-
+        user.setHeadshot("/images/lydia.jpg");
         userRepository.save(user);
 
 
@@ -693,7 +696,7 @@ class DataLoader implements CommandLineRunner {
         user.setRoles(Arrays.asList(userRole));
         user.setArea("Montgomery County");
         user.setGender("Male");
-
+user.setHeadshot("/images/marc.jpg");
         userRepository.save(user);
 
 
