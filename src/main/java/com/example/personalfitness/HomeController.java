@@ -369,6 +369,9 @@ public class HomeController {
 //        String username = principal.getName();
 //        FitnessUser user_current = userRepository.findByUsername(username);
         comment.addUser(user);
+        if(isAnonymous==null){
+            isAnonymous="";
+        }
         System.out.println("isAnonymous: "+ isAnonymous);
         if (isAnonymous.equals("isAnonymous")) {
             comment.setSentby("Anonymous");
