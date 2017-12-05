@@ -304,8 +304,13 @@ public class HomeController {
             request.setShowTrainer(true);
             request.setReceiverAnswer("Accepted");
             request.setStatus("Accepted");
-            trainerUser.addRatableUserName(user.getUsername());
-            user.addRatableUserName(trainerUser.getUsername());
+            if(!trainerUser.getRatableUserNames().contains(user.getUsername())) {
+                trainerUser.addRatableUserName(user.getUsername());
+            }
+
+            if(!user.getRatableUserNames().contains(trainerUser.getUsername())) {
+                user.addRatableUserName(trainerUser.getUsername());
+            }
             user.setUserRequestFlag(true);
 
         } else if (acceptOrDecline.equalsIgnoreCase("decline")) {
