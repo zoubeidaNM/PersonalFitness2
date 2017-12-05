@@ -136,7 +136,7 @@ public class HomeController {
                 }
                 model.addAttribute("message", "User Account Successfully Created");
             } else  {
-                
+
                 model.addAttribute("error", true);
                 model.addAttribute("error_message", "Username already exists. Try again!");
                 model.addAttribute("fitnessLevels", fitnessLevels.findAll());
